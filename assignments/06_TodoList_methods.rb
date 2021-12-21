@@ -77,12 +77,12 @@ class TodoList
 
   def mark_done_at(idx)
     todos.fetch(idx).done!
-    puts "#{self.item_at(idx)} has been marked done!"
+    # item_at(idx).done!
   end
-
+  
   def mark_undone_at(idx)
     todos.fetch(idx).undone!
-    puts "#{self.item_at(idx)} has been marked not done."
+    # item_at(idx).undone!
   end
 
   def done!
@@ -114,18 +114,70 @@ class TodoList
   end
 
   def select
-    new_list = TodoList.new("Selected Todos")
+    list = TodoList.new("Selected Todos")
 
     self.each do |todo|
-      new_list << todo if yield(todo)
+      list << todo if yield(todo)
     end
 
-    new_list
+    list
+  end
+
+  def find_by_title(title)
+    select { |todo| todo.title == title }.first
+    # item = nil
+    # each do |todo|
+    #   item ||= todo if todo.title == title
+    # end
+    # item
+  end
+
+  def all_done
+    select { |todo| todo.done? }
+  end
+
+  def all_not_done
+    select { |todo| !todo.done? }
+  end
+
+  def mark_done(title)
+    find_by_title(title) && find_by_title(title).done!
+  end
+
+  def mark_all_undone
+    each { |todo| todo.done! }
+  end
+
+  def mark_all_done
+    each { |todo| todo.undone! }
   end
 end
 
+# todo1 = Todo.new("Buy milk")
+# todo2 = Todo.new("Clean room")
+# todo3 = Todo.new("Go to gym")
+
+# list = TodoList.new("Today's Todos")
+# list.add(todo1)
+# list.add(todo2)
+# list.add(todo3)
+
+# p list.find_by_title("Clean room") == todo2
+# p list.find_by_title("Wash car") == nil
+
+# todo1.done!
+# todo3.done!
+# list2 = list.all_done
+# p list2.object_id
+# p list.object_id
+# p list2.all_done.instance_of? TodoList
+
+# list3 = list.all_not_done
+# p list3.object_id
+# p list3.instance_of? TodoList
+
 todo1 = Todo.new("Buy milk")
-todo2 = Todo.new("Clean room")
+todo2 = Todo.new("Buy milk")
 todo3 = Todo.new("Go to gym")
 
 list = TodoList.new("Today's Todos")
@@ -133,8 +185,17 @@ list.add(todo1)
 list.add(todo2)
 list.add(todo3)
 
-todo1.done!
+puts list
+p todo1.object_id
+p todo2.object_id
 
-results = list.select { |todo| todo.done? }    # you need to implement this method
+list.mark_done("Wash car")
+puts list
 
-puts results.inspect
+list.mark_all_undone
+puts list
+list.mark_all_done
+puts list
+
+#mark_all_done - mark every todo as done
+#mark_all_undone - mark every todo as not done
