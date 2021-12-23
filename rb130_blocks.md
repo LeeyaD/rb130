@@ -9,15 +9,12 @@
 
 
 ### Writing Methods w/ Blocks
-* In Ruby, every method can take an optional block as an **implicit** argument.
+* In Ruby, every method can take an optional block as an **implicit** argument meaning it doesn't need to specify the block in its argument list or even execute the block at all.
 
 #### Yielding
 It lets us invoke our passed in block argument from within the method
 * wrap in a conditional using `Kernel#block_given?` to allow method w/ `yield` to be invoked with or without a block (i.e. without raising a `LoadJumpError`)
 * **Use case:** `Yield` allows future developers to inject additional code in our method without modifying the method implementation.
-
-#### Passing Execution to the Block
-Shown a code example of how execution goes from method invocation to method implementation, then jumps to the block.
 
 #### Yielding w/ an argument
 ```ruby
@@ -87,6 +84,7 @@ compare("hello", :upcase)
 An **explicit block** is a block that gets assigned to a method parameter so that it can be managed like any other object -- it can be reassigned, passed to other methods, and invoked many times.
 
 To define an explicit block, add a parameter to the method definition that begins with an `&` (ampersand) character.
+If method takes multiple arguments, the explicit block parameter must be last.
 ```ruby
 def test(&block)
   puts "What's &block? #{block}"
@@ -101,9 +99,9 @@ test { sleep(1) }
 * `&` is dropped when referring to the parameter inside the method.
 
 **Why an explicit block parameter?** 
-Provides more flexibility, without a variable to assign the block to we can't do anything beyond `yielding` to it and testing to see if it's there.
+Provides more flexibility, without a variable to assign the block to we can't do anything beyond `yielding` to it and testing to see if it's there. 
 
-With a variable that represents the block, we can *pass the block to another method* 
+With a variable that represents the block, we can managed it like any other object -- it can be reassigned, passed to other methods, and invoked many times.
 ```ruby
 def display(block)
   block.call(">>>") # Passing the prefix argument to the block
@@ -117,13 +115,12 @@ end
 
 test { |prefix| puts prefix + "xyz" }
 ```
-* We use `#call` to invoke a `Proc` object
-* We can pass arguments to an explicit block by using them as arguments to `#call`
+Here we're calling the `#test` method and passing it the following block `{ |prefix| puts prefix + "xyz" }`. The block is passed in and assigned an explicit block parameter `&block`. This parameter, made special by `&`, converts the passed in block into a simple `Proc` object and assigns it to the parameter name prepended by `&`, in this case `block`. We pass the method local variable `block` which references the `Proc` object to the `display` method as an argument. In the `#display` method the passed in block is assigned to the `block` parameter and on the next line we're calling the block with `Proc#call` and passing to it one argument; the string object `">>>"`. The string object gets passed to the `Proc` block and assigned to the block local parameter `prefix`. The block calls `#puts` on `prefefix + "xyz"` which outputs `>>>xyz` and returns `nil`.
 
 **Important note:** Things get a bit more complicated if the caller passes in a `Proc` object, a `lambda`, or some other object to a method that takes an explicit block. But we won't go into that.
 
 #### Using Closures
-In addition to the information about **closures** further up in this doc, they can use and even update variables in that scope when they're executed. Even if the block, `Proc`, or `lambda` is called from somewhere else.
+Closures retain the memory of their surrounding scope and can use and even update variables in that scope when they're executed, even if the block, `Proc`, or `lambda` is called from somewhere else.
 ```ruby
 def for_each_in(arr)
   arr.each { |element| yield element }
@@ -141,7 +138,7 @@ p results # => [0, 1, 3, 6, 10, 15]
 ```
 * Although the block called with `#for_each_in` is called from inside the method (thanks to `yield`), it still has access to the `results` array thru closure.
 
-Closures are especially powerful when a method or block returns them. Of the 3 ways to implement closures, we can only return `Proc`s and `lambda`s. Difference is primarily in syntax.
+Closures are especially powerful when a method or block returns them. Although we implement closures in blocks, `Proc`s and `lambdas` we can only return `Proc`s and `lambda`s (the diff. is mainly in syntax).
 ```ruby
 def sequence
   counter = 0
@@ -159,7 +156,7 @@ p s2.call           # => 1
 p s1.call           # => 4 (note: this is s1)
 p s2.call           # => 2
 ```
-* `#sequence` method returns a `Proc` that forms a closure with the local variable `counter`
+* `#sequence` method returns a newly created `Proc` object that forms a closure with the local variable `counter`
 * Each time we called `Proc`, it incremented its own private copy of the `counter` variable.
 * We can create multiple `Proc`s from `#sequence`, and each will have its own independent copy of `counter`. We see this when we call `#sequence` for a second time, assigning the return value (the `Proc` object) to `s2`. When we call our `Proc` object on `s2` the counter starts at 1. This demonstrates that the bound artifacts are separate and indepent of each other.
 
@@ -204,3 +201,69 @@ If title isn't found, `nil` is returned which `#done!` can't handle (NoMethodErr
 
 
 ### Blocks and Variable Scope
+
+#### Local variable scope refresher
+* A local variable's scope is determined by where it's initialized.
+* Method invocation followed by a block (defined by `do...end` and curly braces {}), creates a new scope.
+* Outer local variables are accessible in the inner scope but not vice versa.
+* Method definitions create a self-contained scope and, therefore, can only access variables iniitalized inside the method or ones defined as parameters (use to assign to objects that are passed in).
+
+#### Closure and binding
+In order for our **closure** (the saved 'chunk of code') to be passed around and executed at a later time, it must understand the surrounding context from where it was defined.
+```ruby
+def call_me(some_code)
+  some_code.call
+end
+
+name = "Robert"
+chunk_of_code = Proc.new {puts "hi #{name}"}
+name = "Griffin III"  # re-assign name after Proc initialization
+
+call_me(chunk_of_code)
+```
+`hi Griffin III` is outputted and `nil` is returned.
+The `Proc` object kept track of its **binding** (surrounding environment/context), so that it had all the information it needed to be executed later on.
+**Bindings** include; local variables, method references, constants and other artifacts -- whatever it needs to execute correctly.
+
+**Important note:**any local variables being accessed by a closure must be defined before the closure is created. Only exception is if the local variable is explicitly passed to the closure when it is called (e.g., `some_proc.call(some_variable)`). If we remove `name = "Robert"` in the code above, it'd change the binding of the `Proc` object & `name` would no longer be *in scope* since it is initialized after the `Proc` is instantiated.
+
+Srdjan: If we try to invoke a method without an explicit caller and without parentheses, Ruby will *first* check to see if there is a local variable of that name within scope (which in the case of a block includes it's binding), if there is then Ruby will return the object referenced by the local variable, if not it will attempt to call a method of that name on self. 
+
+Ginni: In order for local variables to be a part of a closures binding, they must be initialized before the closure is created unless they are explicitly passed into the closure.
+
+##### Me trying to understand why exactly
+**WITH `name = 'Robert'`**
+`name` in `{puts "hi #{name}"}` is a local variable that's been initialized before the `Proc` object was created which means `name` will be in the `Proc` object's bindings. When we invoke the `#call` method on the `Proc` object, Ruby finds the local variable in the `Proc`s bindings and returns the value it references, which may or may not have been reassigned between the time the `Proc` object was created and the time the `Proc` object is invoked.
+
+**WITHOUT `name = 'Robert'`**
+`name` in `{puts "hi #{name}"}` is an uninitialized local variable at the time the `Proc` object was created which means it won't be part of its bindings. When we invoke the `#call` method on the `Proc` object, Ruby first checks to see if there's a local variable by that name *within scope*...meaning initialized at the time the `Proc` was created and therefore part of its bindings. Ruby won't find a local variable with that name in the `Proc`s bindings, so Ruby will attempt to call it like a method. Since there is no explicit caller, Ruby will invoke the method *implicitly* on `self` but because there are no methods defined in scope with that name--irregardless of when the `Proc` object was create--an `undefined local variable or method NameError` is raised.
+
+
+### Symbol to proc
+```ruby
+[1, 2, 3, 4, 5].map { |num| num.to_s } # From this...
+[1, 2, 3, 4, 5].map(&:to_s) # To this...
+```
+`&:to_s` is a shortcut we can use when working with collections. It allows us to call the method, by it's symbol name, on every element of our collection.
+* It cannot be used on methods that take arguments
+* It can be used on any collection method that take a block
+
+#### Symbol#to_proc
+It's very common to want to transform all items in a collection by calling the same method on each element so a shortcut was created. When calling methods with blocks we can use the symbol-to-proc trick that take this: `&:to_s` and converts it to this: `{ |n| n.to_s }`. 
+
+The `&` character is prepended to an object (possibly referenced by a variable) to convert the object into a block. If the object is already a `Proc` Ruby can convert it to a block naturally but if the object isn't a '`Proc`, which is the case here `&:to_s` (or object is a `Symbol`), we'll have to first convert it to one. And so, Ruby will call `#to_proc` to return a `Proc` object, then convert the resulting Proc to a block.
+
+**Within a method invocation**, using `&` in front of the last argument converts the argument to a Proc, if necessary, then converts the Proc to a block
+```ruby
+[1, 2, 3].map(&:odd?)    # & within a method invocation
+# &:odd? becomes { |n| n.odd? }
+```
+
+**Within a method definition**, the `&` is a special parameter that converts the optional block being passed in as an argument, into a simple `Proc` object. Furthermore, the `Proc` object is assigned to the parameter name that follows the ampersand character. This gives us the ability to refer to an optional block being passed in, within the method body.
+```ruby
+def some_method(&block)   # & within a method definition
+  block.call
+end
+
+some_method { puts "hi from the explicit block!" }
+```
