@@ -54,7 +54,6 @@ class TodoList
   def add(todo)
     if todo.class == Todo
       todos << todo
-      puts "Todo item successfully added!"
     else
       raise TypeError.new("Can only add Todo objects")
     end
@@ -94,12 +93,10 @@ class TodoList
 
   def mark_done_at(idx)
     todos.fetch(idx).done!
-    puts "#{self.item_at(idx)} has been marked done!"
   end
 
   def mark_undone_at(idx)
     todos.fetch(idx).undone!
-    puts "#{self.item_at(idx)} has been marked not done."
   end
 
   def done!
@@ -119,15 +116,20 @@ class TodoList
   end
 
   def to_s
-    puts "Today's Todos"
-    todos.each { |todo| puts "#{todo}" }
+    text = "---- #{title} ----\n"
+    text << @todos.map(&:to_s).join("\n")
+    text
   end
 
-  # def to_s
-  #   text = "---- #{title} ----\n"
-  #   text << @todos.map(&:to_s).join("\n")
-  #   text
-  # end
+  def select
+    new_list = TodoList.new(self.title)
+  
+    todos.select do |todo|
+      new_list << todo if yield(todo)
+    end
+
+    new_list
+  end
 end
 
 # The assignment for you is to figure out the rest of the implementation in order for the below code to work. Note that this assignment doesn't have anything to do with blocks yet -- it's just basic Ruby at this point.

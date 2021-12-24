@@ -267,3 +267,15 @@ end
 
 some_method { puts "hi from the explicit block!" }
 ```
+
+num = 1
+
+x = Proc.new { num += 1 }
+
+p x.call
+p x.call
+p x.call
+
+x2 = Proc.new { num += 1 }
+
+p x2.call
