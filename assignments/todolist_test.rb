@@ -1,6 +1,9 @@
+require 'simplecov'
+SimpleCov.start
 require 'minitest/autorun'
 require "minitest/reporters"
 Minitest::Reporters.use!
+
 
 require_relative '03_TodoList'
 
@@ -58,6 +61,10 @@ class TodoListTest < MiniTest::Test
   def test_raise_add_with_type    # LS calls this test `test_add_raise_error`
     assert_raises(TypeError) { @list.add("todo item") }
     assert_raises(TypeError) { @list.add(5) }
+    error = assert_raises(TypeError) do
+      raise TypeError, "Can only add Todo objects"
+    end
+    assert_equal("Can only add Todo objects", error.message)
   end
 
   def test_shovel_method    # LS calls this test `test_shovel`
@@ -168,4 +175,10 @@ class TodoListTest < MiniTest::Test
     refute_same(list, @list)
   end
 
+  def test_todo_equality
+    @todo4 = Todo.new("Buy milk")
+    # result = @todo4 == @todo1
+    # assert_equal(true, result)
+    assert_equal(@todo4.title, @todo1.title)
+  end
 end

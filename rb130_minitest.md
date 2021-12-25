@@ -55,7 +55,7 @@ end
 ```
 Output of running the tests looks the same whether they were written assertion-style or expectation-style.
 
-#### Assertions
+### Assertions
 Some common assertions...
 ```ruby
 def test_car_exists
@@ -117,7 +117,7 @@ end
 * There is a refute_equal, refute_nil, refute_includes, etc.
 
 
-#### SEAT Approach
+### SEAT Approach
 4 steps to writing a minitest
 1. Set up the necessary objects.
 2. Execute the code against the object we're testing.
@@ -181,4 +181,10 @@ class CarTest < MiniTest::Test
   end
 end
 ```
-Without 
+
+### Code coverage
+How much of our actual program code is tested by a test suite.
+* Code coverage is based on all of your code, both public and private.
+* This doesn't mean edge cases are considered, or that our program is working correctly. Only that we have some tests in place for every method.
+* Code coverage is one metric that you can use to gauge code quality.
+* It's not always necessary to get 100% coverage, but the % should depend on the type of project you work on. The more fault tolerant it has to be, the higher the test coverage.
