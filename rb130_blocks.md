@@ -1,6 +1,6 @@
 ## Blocks
 ### Closures in Ruby
-* "Chunks of code" saved and executed at a later time.
+* "Chunks of code" *saved* and executed at a later time.
 * 3 ways to work w/ closures:
   1. Instantiating an object from the `Proc` class
   2. Using blocks
@@ -14,7 +14,7 @@
 #### Yielding
 It lets us invoke our passed in block argument from within the method
 * wrap in a conditional using `Kernel#block_given?` to allow method w/ `yield` to be invoked with or without a block (i.e. without raising a `LoadJumpError`)
-* **Use case:** `Yield` allows future developers to inject additional code in our method without modifying the method implementation.
+* **Use case #1:** `Yield` allows future developers to inject additional code in our method without modifying the method implementation.
 
 #### Yielding w/ an argument
 ```ruby
@@ -27,9 +27,9 @@ end
 `num` between the pipes, `| |`, is the *block paramenter*
 `num` **within the block** is the *block local variable*
 
-* remember not to name your *block parameter* the same name as a local variable defined outside the block as this will cause *variable shadowing* (i.e. we won't be able to access the variable in the outer scope).
+* **Remember** not to name your *block parameter* the same name as a local variable defined outside the block as this will cause *variable shadowing* (i.e. we won't be able to access the variable in the outer scope).
 
-To add to the previous use case, we can make our methods flexible by passing an argument to the block. This allows users to do what they will with that argument at method invocation time.
+**To add to the previous use case**, we can make our methods flexible by passing an argument to the block. This allows users to do what they will with that argument at method invocation time.
 
 **arity** rule regarding the number of arguments you have to pass to a block, `proc`, or `lambda`.
   * blocks & `proc`s have **lenient arity** which means Ruby won't raise an error if we pass too few or too many arugments to either
