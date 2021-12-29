@@ -3,9 +3,10 @@
 * "Chunks of code" *saved* and executed at a later time.
 * 3 ways to work w/ closures:
   1. Instantiating an object from the `Proc` class
-  2. Using blocks
+  2. Using blocks**
   3. Using lambdas
 * They're **binding** in that they retain references to their surrounding *artifacts* (i.e. variables, methods, objects, etc)
+** Blocks can't be saved, which means they're
 
 
 ### Writing Methods w/ Blocks

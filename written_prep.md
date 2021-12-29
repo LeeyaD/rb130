@@ -1,57 +1,57 @@
-### Blocks
-#### Closures, binding, and scope
-1. What are closures?
+## Blocks
+### Closures, binding, and scope
+1. How does binding affect the scope of closures?**
 
-2. What is binding?
+### How blocks work, and when we want to use them.
+2. How do blocks work?**
 
-3. How does binding affect the scope of closures?
 
-#### How blocks work, and when we want to use them.
-4. How do blocks work?
+3. When do we use blocks? (List the two reasons)**
 
-5. When do we use blocks? (List the two reasons)
+4. Describe the two reasons we use blocks, use examples.**
 
-6. Describe the two reasons we use blocks, use examples.
+### Blocks and variable scope
+- **What is variable scope?**
+  * The area of a program where a variable is recognized; where it can be accessed and referenced. This area (scope) is determined by where the variable is initialized and so the limits of that variable's scope are defined by a *method definition* or by a *block* that directly follows a method invocation.
 
-#### Blocks and variable scope
-* What is local variable scope?
+**blocks** A method invoked with a block (delimited by either `do`..`end` or `{}`) creates a more open scope. Variables initialized within it cannot be accessed outside of it, but variables initialized outside of it can be accessed from within it.
 
-#### Write methods that use blocks and procs
-#### Understand that methods and blocks can return chunks of code (closures)
-12, Why is it important to know that methods and blocks can return closures?
-#### Methods with an explicit block parameter
-8, How do we make a block argument manditory?
-13, What are the benifits of explicit block?
-9, How do methods access both implicit and explicit blocks passed in?
-#### Arguments and return values with blocks
-#### When can you pass a block to a method
-7, When can you pass a block to a method? Why?
-#### &:symbol
-16, What does `&` do when in a the method parameter?
-#### Arity of blocks and methods
-14, Describe the arity differences of blocks, procs, methods and lambdas.
+**method definition** creates a self contained scope. Variables initialized within it cannot be accessed outside of it; variables initialized outside of it can only be accessed within it if they're passed in to the method as arguments when it's invoked. 
 
-10, What is yield in Ruby and how does it work?
+### Understand that methods and blocks can return chunks of code (closures)
+5. Why is it important to know that methods and blocks can return closures?
+### Methods with an explicit block parameter
+6. How do we make a block argument manditory?
+7. What are the benifits of explicit block?
+8. How do methods access both implicit and explicit blocks passed in?
+### Arguments and return values with blocks
+### When can you pass a block to a method
+9. When can you pass a block to a method? Why?
+### &:symbol
+10. What does `&` do when in a the method parameter?
+### Arity of blocks and methods
+11. Describe the arity differences of blocks, procs, methods and lambdas.
 
-11, How do we check if a block is passed into a method?
+12. What is yield in Ruby and how does it work?**
+* - It is a keyword (NOT a method) that allows us to execute implicit blocks that have been passed in.
 
-15, What other differences are there between lambdas and procs? (might not be assessed on this, but good to know)
+13. How do we check if a block is passed into a method?
 
-```ruby
-def method(&var); end
-```
-17, What does & do when in a method invocation argument?
+14. What other differences are there between lambdas and procs? (might not be assessed on this, but good to know)
+
+
+1. What does `&` do when in a method invocation argument?
 ```ruby
 method(&var)
 ```
-18, What is happening in the code below?
+2. What is happening in the code below?
 ```ruby
 arr = [1, 2, 3, 4, 5]
 
 p arr.map(&:to_s) # specifically `&:to_s`
 ```
 
-19, How do we get the desired output without altering the method or the method invocations?
+3. How do we get the desired output without altering the method or the method invocations?
 ```ruby
 def call_this
   yield(2)
@@ -266,47 +266,46 @@ my_proc = Proc.new { puts "hello" }
 a_method(&my_proc) == a_method { puts "hello" }
 ```
 
-### Testing With Minitest
-#### Testing terminology
-#### Minitest vs. RSpec
-#### SEAT approach
-#### Assertions
-* What is a test suite?
+## Testing With Minitest
+1. What is a test suite?
+* - the entire set of tests that accompany a program or application; all the tests for a project.
+2. What is a test?
+* - 
+3. What is Domain Specific Language (DSL)? *ask Andrew, seems like it's not to be thought of like Ruby or Python cause Minitest is Ruby but it "can use" a DSL? What does that even mean? "can use a DSL" like we can write it in expectation-style???
+4. What do testing framworks provide?
+5. What is regression testing?
+### Testing terminology
+6. What is code coverage?
+### Minitest vs. RSpec
+7. What are the differences of Minitest vs RSpec?
+**RSpec:**
+* written to be read like English
+* 
+**Minitest**
+* used to be bundled with Ruby
+### SEAT approach
+8. What is the SEAT approach and what are its benefits?
+9. When does setup and tear down happen when testing?
+### Assertions
+10. What is an assertion?
+* - the verification step in testing. It's when we verify that the data returned by our program/application is what is expected.
+* - you make one or more assertions within a test.
 
-* What is a test?
-
-* What is an assertion?
-
-* What do testing framworks provide?
-
-* What are the differences of Minitest vs RSpec
-
-* What is Domain Specific Language (DSL)?
-
-* What is the difference of assertion vs refutation methods?
-
-*  How does assert_equal compare its arguments?
-
-*  What is the SEAT approach and what are its benefits?
-
-*  When does setup and tear down happen when testing?
-
-*  What is code coverage?
-
-*  What is regression testing?
+11. What is the difference of assertion vs refutation methods?
+12. How does assert_equal compare its arguments?
 
 
-### Core Tools/Packaging Code
-#### Purpose of core tools
-#### Gemfiles
-*  What are the purposes of core tools?
 
-*  What are RubyGems and why are they useful?
 
-*  What is Version Control and why are they useful?
+## Core Tools/Packaging Code
+### Purpose of core tools
+13. What are the purposes of core tools?
+14. What is Version Control and why are they useful?
+### Gemfiles
+15. What are RubyGems and why are they useful?
 
-*  What is Bundler and why is it useful?
+16. What is Bundler and why is it useful?
 
-*  What is Rake and why is it useful?
+17. What is Rake and why is it useful?
 
-*  What constitues a Ruby project?
+18. What constitues a Ruby project?
