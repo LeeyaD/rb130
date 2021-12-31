@@ -1,14 +1,25 @@
 ## Blocks
 ### Closures, binding, and scope
-1. How does binding affect the scope of closures?**
+**How does binding affect the scope of closures?**
+Bindings contain artifacts that are 'in-scope' at the time of a closure's creation. Since closures allow us to pass around chunks of code and execute them elsewhere, even in other scopes (e.g. from inside a method). Bindings allow us to access these retained references even when we're no longer "in-scope".
 
 ### How blocks work, and when we want to use them.
-2. How do blocks work?**
+**What are blocks?**
+Blocks are defined by either the Ruby keywords `do`..`end` or curly braces `{}`. When used directly following a method invocation, it gets passed to the method inmplicitly. Depending on the method's implementation (i.e. whether there is an explicit block parameter or the keyword `yield`), the block may or may not be executed. Blocks can have parameters and due to a block's lenient arity, it can be passed too many or too few arguments without raising an error (too many and the block will ignore extra args; too few and the block will set extra params to `nil`).
+
+syntax >> arity >> scope >> variable shadowing >> 
 
 
-3. When do we use blocks? (List the two reasons)**
+**When do we use blocks? (List the two reasons)**
+1. When we want to defer some implementation code to method invocation decision. 
+2. When writing a method that needs to perform some "before" & "after" action 'aka' sandwich code.
 
-4. Describe the two reasons we use blocks, use examples.**
+**Describe the two reasons we use blocks, use examples.**
+1. When we want to defer some if our implementation code to method invocation decision because we (the method implementors) aren't 100% sure what the 'method caller' wants to do. We provide the ability to refine the method implementation without modifying it for others.
+For example, the `#each` method iterates thru a collection, passing each element in the collection to the block to be executed however the method caller wants
+
+2. When writing a method that needs to perform some "before" & "after" action 'aka' sandwich code. The action in question is left to the 'method caller' to determine.
+For example, if we wanted to time how long an action takes we could call `Time#now` before & after the action, then return the difference.
 
 ### Blocks and variable scope
 - **What is variable scope?**
@@ -21,12 +32,16 @@
 ### Understand that methods and blocks can return chunks of code (closures)
 5. Why is it important to know that methods and blocks can return closures?
 ### Methods with an explicit block parameter
-6. How do we make a block argument manditory?
+**How do we make a block argument manditory?**
+By using the Ruby keyword `yield`
+
 7. What are the benifits of explicit block?
 8. How do methods access both implicit and explicit blocks passed in?
 ### Arguments and return values with blocks
 ### When can you pass a block to a method
-9. When can you pass a block to a method? Why?
+**When can you pass a block to a method? Why?**
+Always because all Ruby methods can take blocks passed implicitly.
+
 ### &:symbol
 10. What does `&` do when in a the method parameter?
 ### Arity of blocks and methods
@@ -223,6 +238,7 @@ name = 'Santa'
 my_proc = Proc.new do 
   puts name
 end
+irb
 
 def my_method(&block)
   block.call
@@ -267,45 +283,121 @@ a_method(&my_proc) == a_method { puts "hello" }
 ```
 
 ## Testing With Minitest
-1. What is a test suite?
-* - the entire set of tests that accompany a program or application; all the tests for a project.
-2. What is a test?
+##### What is a test suite?
+The entire set of tests that accompany a program or application; all the tests for a project.
+
+##### What is a test?
 * - 
-3. What is Domain Specific Language (DSL)? *ask Andrew, seems like it's not to be thought of like Ruby or Python cause Minitest is Ruby but it "can use" a DSL? What does that even mean? "can use a DSL" like we can write it in expectation-style???
-4. What do testing framworks provide?
-5. What is regression testing?
+
+##### What is Domain Specific Language (DSL)? 
+*ask Andrew, seems like it's not to be thought of like Ruby or Python cause Minitest is Ruby but it "can use" a DSL? What does that even mean? "can use a DSL" like we can write it in expectation-style???
+
+#### What do testing framworks provide?
+
+#### What is regression testing?
+
 ### Testing terminology
-6. What is code coverage?
-### Minitest vs. RSpec
-7. What are the differences of Minitest vs RSpec?
+##### What is code coverage?
+How much of our actual program code (all of it, public & private) is tested by a test suite. We can test for this with the RubyGem, `simplecov`.
+
+##### What are the differences of Minitest vs RSpec?
 **RSpec:**
+* a DSL testing tool written in the programming language Ruby to test Ruby code
+* a unit test framework for the Ruby programming language
 * written to be read like English
-* 
+* can also use a DSL?? but it can also be used in a way that reads like ordinary Ruby code without a lot of magical syntax. 
 **Minitest**
 * used to be bundled with Ruby
-### SEAT approach
-8. What is the SEAT approach and what are its benefits?
-9. When does setup and tear down happen when testing?
-### Assertions
-10. What is an assertion?
+
+#### What is the SEAT approach and what are its benefits?
+#### When does setup and tear down happen when testing?
+
+
+#### What is an assertion?
 * - the verification step in testing. It's when we verify that the data returned by our program/application is what is expected.
 * - you make one or more assertions within a test.
 
-11. What is the difference of assertion vs refutation methods?
-12. How does assert_equal compare its arguments?
+#### What is the difference of assertion vs refutation methods?
+Their writing styles are opposite; assertions pass when they
+
+#### How does assert_equal compare its arguments?
+Using the expected object's `#==` method (e.g.; `Array#==`, `String#==`, etc.). If the expected object is from a custom class, the `#==` method must be defined.
 
 
 
-
-## Core Tools/Packaging Code
 ### Purpose of core tools
-13. What are the purposes of core tools?
-14. What is Version Control and why are they useful?
-### Gemfiles
-15. What are RubyGems and why are they useful?
+##### What are the purposes of core tools?
+Collectively core tools help us build our Ruby projects from beginning to end. Each core tool has its own unique function and is used as needed, at different points of our project's development.
 
-16. What is Bundler and why is it useful?
+##### What are Version Control Managers and why are they useful?
+They're programs that manage multiple versions of Ruby, the utilities (such as irb) associated with each version, and the RubyGems installed for each Ruby. They allow us to install and uninstall ruby versions and gems, and run specific versions of ruby with specific programs and environments.
 
-17. What is Rake and why is it useful?
+##### What are RubyGems and why are they useful?
+Also called 'gems', they're packages of code that we can download, install, and use in our Ruby programs or from the command line. There are thousands of gems availabl, so which ones we use depends entirely on our needs. For example, the `pry` gem helps debug Ruby programs while `rubocop` checks for Ruby style guide violations and other potential issues in our code.
 
-18. What constitues a Ruby project?
+##### What is Bundler and why is it useful?
+Bundler lets us describe exactly which Ruby and Gems we want to use with our Ruby apps. Specifically, it lets us install multiple versions of each Gem under a specific version of Ruby and then use the proper version in our app.
+
+##### What is Rake and why is it useful?
+It automates many common functions required to build, test, package, and install programs
+
+a tool that you use to perform repetitive development tasks, such as running tests, building databases, packaging and releasing the software, etc. The tasks that Rake performs are varied, and frequently change from one project to another; you use the Rakefile file to control which tasks your project needs.
+
+Set up required environment by creating directories and files
+Set up and initialize databases
+Run tests
+Package your application and all of its files for distribution
+Install the application
+Perform common Git tasks
+Rebuild certain files and directories (assets) based on changes to other files and directories
+In short, you can write Rake tasks to automate anything you may want to do with your application during the development, testing, and release cycles.
+
+very project that aims to produce a finished project that either you or other people intend to use in the future has repetitive tasks the developer needs. For instance, to release a new version of an existing program, you may want to:
+
+Run all tests associated with the program.
+Increment the version number.
+Create your release notes.
+Make a complete backup of your local repo.
+Each step is easy enough to do manually, but you want to make sure you execute them in the proper order (for instance, you want to set the new version number before you commit your changes). You also don't want to be at the mercy of arbitrary typos that may do the wrong thing. It's far better to have a way to perform these tasks automatically with just one command, which is where Rake becomes extremely useful.
+
+##### What constitues a Ruby project?
+A collection of one or more files used to develop, test, build, and distribute software. The software may be an executable program, a library module, or a combination of programs and library files. The project itself includes the source code (not only Ruby source code, but any language used by the project, such as JavaScript), tests, assets, HTML files, databases, configuration files, and more.
+
+### notes from call w/ James/Oscar
+**how is it used?** Prepend a method parameter with the unary &; within the method itself refer to block parameter (which is now a "simple" Proc object) without the & (i.e. to pass it to another method, when invoking with Proc#call, etc.)
+
+# what is it? The &block is a special parameter that converts the block argument to what we call a "simple" Proc object 
+
+# why do we use explicit blocks? because it allows additional flexibility 
+
+The whole point of a Proc is to be able to save a block
+
+## Blocks
+What are Procs and lambdas? How are they different?
+How do closures interact with variable scope?
+What are blocks used for? Give examples of specific use cases
+How do we write methods that take a block? What erros and pitfalls can arise from this and how do we avoid them?
+How do we utilize the return value of a block? How can methods that take a block pass pieces of data to that block?
+What is Symbol#to_proc and how is it used?
+How do we specific a block argument explicitly?
+How can we return a Proc from a method or block?
+What is arity? What kinds of things in Ruby exhibit arity? Give explicit examples.
+
+## Testing
+What is Minitest? How do we get access to it?
+What are the different styles of Minitest?
+What is RSpec? How does it differ from Minitest?
+What is a test suite? What is a test?
+What are assertions? How do they work?
+Give some examples of common assertions and how they are used.
+What is the SEAT approach?
+What is code coverage and how is it used? What tools can you use to gauge code coverage for yourself?
+
+## Core Ruby Tools
+What are RubyGems? How are they used? Where can you find them? How do you manage them in your own environment? How do you include them in projects you create?
+What is the RubyGems format for projects?
+What are Ruby Version Managers? Why do we need them? Give some exampled of available Ruby Version Managers and what they can do for you.
+What is Bundler? What does it do and why is it useful?
+What is Rake? What does it do and why is it useful?
+What is a .gemspec file?
+How do the Ruby tools relate to one another?

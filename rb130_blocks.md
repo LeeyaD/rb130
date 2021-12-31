@@ -254,13 +254,31 @@ It's very common to want to transform all items in a collection by calling the s
 
 The `&` character is prepended to an object (possibly referenced by a variable) to convert the object into a block. If the object is already a `Proc` Ruby can convert it to a block naturally but if the object isn't a '`Proc`, which is the case here `&:to_s` (or object is a `Symbol`), we'll have to first convert it to one. And so, Ruby will call `#to_proc` to return a `Proc` object, then convert the resulting Proc to a block.
 
-**Within a method invocation**, using `&` in front of the last argument converts the argument to a Proc, if necessary, then converts the Proc to a block
+
+
+**Within a method invocation**
+(Only example is `Symbol to proc trick`)
+* & wants to convert the object following it into a block. 
+* if we're passing in a Proc, Ruby can convert it into a block effortlessly. 
+* Otherwise, #to_proc is called to first convert the object into a Proc, then a block
+* If Ruby can't convert the object into a Proc, an error is raised
+
+using `&` in front of the last argument converts the argument to a Proc, if necessary, then converts the Proc to a block
 ```ruby
 [1, 2, 3].map(&:odd?)    # & within a method invocation
 # &:odd? becomes { |n| n.odd? }
 ```
 
-**Within a method definition**, the `&` is a special parameter that converts the optional block being passed in as an argument, into a simple `Proc` object. Furthermore, the `Proc` object is assigned to the parameter name that follows the ampersand character. This gives us the ability to refer to an optional block being passed in, within the method body.
+**Unary & at method implementation**
+To do anything in a method with a block other than execute it with `yield`, the block needs to be converted to a Proc. 
+
+We create a Proc by calling a method with an explicit block parameter (&parameter). 
+
+When the block is passed in and assigned to the explicit param, it's been converted to a Proc object. 
+
+Now it can be referenced and passed around.
+
+the `&` is a special parameter that converts the optional block being passed in as an argument, into a simple `Proc` object. Furthermore, the `Proc` object is assigned to the parameter name that follows the ampersand character. This gives us the ability to refer to an optional block being passed in, within the method body.
 ```ruby
 def some_method(&block)   # & within a method definition
   block.call
