@@ -5,9 +5,8 @@ A programming concept, it refers to a piece of code that's saved and executed at
 2. What is binding? - DONE
 A retained reference to the surrounding environment/context, specifically the artifacts (i.e. variables, methods, objects, etc) that are in-scope.
 
-# REVIEW once more, THEN ADD to Anki deck
-3. How do closures interact with variable scope?
- A closure's binding adheres to variable scoping rules and, therefore, only retain references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them elsewhere, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
+3. How do closures interact with variable scope? - DONE
+ A closure's binding adheres to variable scoping rules in that it only retains references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
  ```ruby
  name = "Leeya"
  def a_method(suffix)
@@ -31,9 +30,9 @@ A retained reference to the surrounding environment/context, specifically the ar
 
  ```
 
-# REVIEW once more, THEN ADD to Anki deck
-4. How do blocks work?
-Defined with the keywords `do`..`end` or curly braces `{}` directly following a method's invocation, blocks are passed to the method as an implicit argument. If the keyword `yield` is included in the method's implementation, code execution will jump from the method to the block to run the code there, then execution returns to the method implementation and continue running code from where it left off. 
+
+4. How do blocks work? - DONE
+Defined with the keywords `do`..`end` or curly braces `{}`, blocks directly following the invocation of a method are passed to the method as an implicit argument. If the keyword `yield` is included in the method's implementation, code execution will jump from the method to the block to run the code there, then execution returns to the method to continue from where it left off. 
 
 Blocks can have parameters and due to a block's lenient arity, no errors are raised if too many or too few arguments are passed to it. When passed more arguments than there are block parameters, the block will ignore the extra arguments. When passed fewer arguments than there are block parameters, the block will set its extra parameters to `nil`).
 ```ruby
@@ -48,8 +47,7 @@ a_method { |name1, name2, name3| puts "#{name1}, #{name2}, and #{name3}"}
 
 ```
 
-# REVIEW once more, THEN ADD to Anki deck
-* What are blocks used for? Give examples of specific use cases
+* What are blocks used for? Give examples of specific use cases - DONE
  > 1. When we want to defer some implementation code to method invocation decision. 
  When we (the method implementors) aren't 100% sure what the 'method caller' wants to do. We provide the ability to refine the method implementation without modifying it for others.
  For example, the `#each` method iterates thru a collection, passing each element in the collection to the block to be executed however the method caller. wants since that part of the method's implementation has been left up to them.
@@ -88,10 +86,10 @@ Anytime because all Ruby methods can take an optional block as an implicit argum
 8. How do we make a block argument manditory? - DONE
 By using the Ruby keyword `yield` in our method implmentation. When the method is invoked without a block argument a `LoadJumpError` will be raised.
 
-# REVIEW once more, THEN ADD to Anki deck
-9. How do methods access both implicit and explicit blocks passed in?
+
+9. How do methods access both implicit and explicit blocks passed in? - DONE
 Implicit blocks can be accessed if a method is defined with the `yield` keyword.
-Explicit blocks are assigned to an **explicit block parameter** that converts it into a `Proc` object when passed to a method. It has become a named object and can, therefore, be accessed by name--we drop the unary `&`--to reference or passed around like any other object. To execute it we call `Proc#call` on it.
+Explicit blocks can be accessed either by calling `Proc#call` on it to execute its code or by name (dropping the unary `&` from the param) to manage like any other object.
 
 
 10. What is `yield` in Ruby and how does it work? - DONE
@@ -111,6 +109,7 @@ a_method { |name| puts "hello, #{name}" }
 11. How do we check if a block is passed into a method? - DONE
 We can call `Kernel#block_given?` which will return `true` if a block has been passed in or `false` otherwise.
 
+---- All notes up to here have been added to Anki deck ---------
 ----- LEFT OFF HERE---------
 12. Why is it important to know that methods and blocks can return closures?
 
@@ -144,7 +143,7 @@ a_method { puts "I'm a block turned proc" }
 ```ruby
 arr = [1, 2, 3, 4, 5]
 p arr.map(&:to_s) # specifically `&:to_s`
-# When applied to an argument object for a method, a urnary `&` causes ruby to try to convert that object to a block. If that object is a proc, the conversion happens automatically.
+# When applied to an argument object for a method, a unary `&` causes ruby to try to convert that object to a block. If that object is a proc, the conversion happens automatically.
 
 p arr.map(&(Proc.new { |n| n.to_s }))
 # If the object is not a proc, then `&` attempts to call the `#to_proc` method on the object first. Used with symbols, e.g., &:to_s Ruby creates a proc that calls the #to_s method on a passed object, and....
@@ -500,3 +499,5 @@ G. What is a .gemspec file?
 # REVIEW once more, THEN ADD to Anki deck
 6. What constitues a Ruby project?
 A collection of one or more files used to develop, test, build, and distribute software. The software may be an executable program, a library module, or a combination of programs and library files. The project itself includes the source code (not only Ruby source code, but any language used by the project, such as JavaScript), tests, assets, HTML files, databases, configuration files, and more.
+
+
