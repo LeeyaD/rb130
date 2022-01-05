@@ -22,12 +22,13 @@
 # -- - - ADD 'letter' to empty string, 'results'
 # 3. RETURN 'results'
 
+PIONEERS = [ "Nqn Ybirynpr", "Tenpr Ubccre", "Nqryr Tbyqfgvar", "Nyna Ghevat", "Puneyrf Onoontr", "Noqhyynu Zhunzznq ova Zhfn ny-Xujnevmzv", "Wbua Ngnanfbss", "Ybvf Unvog", "Pynhqr Funaaba", "Fgrir Wbof", "Ovyy Tngrf", "Gvz Orearef-Yrr", "Fgrir Jbmavnx", "Xbaenq Mhfr", "Fve Nagbal Ubner", "Zneiva Zvafxl", "Lhxvuveb Zngfhzbgb", "Unllvz Fybavzfxv", "Tregehqr Oynapu"]
+
 ALPHA = ("a".."z").to_a
 
-
-def decrypt_name(name)
+def decipher(name)
   results = ""
-  
+
   name.chars.each do |char|
     if !ALPHA.include?(char.downcase)
       results << char
@@ -42,25 +43,7 @@ def decrypt_name(name)
   results
 end
 
-
-p decrypt_name("Nqn Ybirynpr") == "Ada Lovelace"
-p decrypt_name("Tenpr Ubccre") == "Grace Hopper"
-p decrypt_name("Nqryr Tbyqfgvar") == "Adele Goldstine"
-p decrypt_name("Nyna Ghevat") == "Alan Turing"
-p decrypt_name("Puneyrf Onoontr") == "Charles Babbage"
-p decrypt_name("Noqhyynu Zhunzznq ova Zhfn ny-Xujnevmzv") == "Abdullah Muhammad bin Musa al-Khwarizmi"
-p decrypt_name("Wbua Ngnanfbss") == "John Atanasoff"
-p decrypt_name("Ybvf Unvog") == "Lois Haibt"
-p decrypt_name("Pynhqr Funaaba") == "Claude Shannon"
-p decrypt_name("Fgrir Wbof") == "Steve Jobs"
-p decrypt_name("Ovyy Tngrf") == "Bill Gates"
-p decrypt_name("Gvz Orearef-Yrr") == "Tim Berners-Lee"
-p decrypt_name("Fgrir Jbmavnx") == "Steve Wozniak"
-p decrypt_name("Xbaenq Mhfr") == "Konrad Zuse"
-p decrypt_name("Fve Nagbal Ubner") == "Sir Antony Hoare"
-p decrypt_name("Zneiva Zvafxl") == "Marvin Minsky"
-p decrypt_name("Lhxvuveb Zngfhzbgb") == "Yukihiro Matsumoto"
-p decrypt_name("Unllvz Fybavzfxv") == "Hayyim Slonimski"
-p decrypt_name("Tregehqr Oynapu") == "Gertrude Blanch"
-
+PIONEERS.each do |pioneer|
+  puts decipher(pioneer)
+end
 # Write a program that deciphers and prints each of these names .
