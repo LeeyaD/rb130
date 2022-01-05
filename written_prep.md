@@ -109,10 +109,9 @@ a_method { |name| puts "hello, #{name}" }
 11. How do we check if a block is passed into a method? - DONE
 We can call `Kernel#block_given?` which will return `true` if a block has been passed in or `false` otherwise.
 
----- All notes up to here have been added to Anki deck ---------
------ LEFT OFF HERE---------
-12. Why is it important to know that methods and blocks can return closures?
-
+12. Why is it important to know that methods and blocks can return closures? - DONE
+Because a returned closure (Proc or lambda) can be saved to a variable, which can then be managed like any other object. It's the programming concept in action; chunks of code that can be saved and executed later.
+*mention bindings being passed around too
 
 13. What are the benefits of explicit blocks? - DONE
 The increased flexibility. When they become named objects we can pass them around, reassign them, and execute them at a later time--as many times as we want--in other scopes.
@@ -122,6 +121,8 @@ Arity refers to the rule regarding the number of arguments that have to be passe
 Blocks & Procs have **lenient arity** which means no errors are raised if too many or too few arguments are passed to them. When passed more arguments than there are parameters, they'll ignore the extra arguments. When passed fewer arguments than there are parameters, they'll set their extra parameters to `nil`).
 Methods & Lambdas have **strict** arity, meaning the number of arguments passed must match the number of parameters being defined, otherwise, an ArgumentError will be raised.
 
+---- All notes up to here have been added to Anki deck ---------
+----- LEFT OFF HERE---------
 # REVIEW once more, THEN ADD to Anki deck
 16. What does the unary`&` do when in the method parameter? / How do we specify a block argument explicitly?
 Prepended to a method parameter, it creates an optional explicit block parameter that converts a block argument into a "simple" Proc object if one is provided. This allows us to manage the block, which is now a Proc object, within the method like any other object* -- it can be reassigned, passed to other methods, and invoked many times.
@@ -135,6 +136,9 @@ a_method { puts "I'm a block turned proc" }
 ```
 
 17. What does `&` do when in a method invocation argument?
+When applied to an argument object for a method, a unary `&` causes ruby to try to convert that object to a block. * If that object is a proc, the conversion happens automatically.
+* If the object is not a proc, then `&` attempts to call the `#to_proc` method on the object first and then converts that proc to a block. 
+
 
 18. How do we utilize the return value of a block? How can methods that take a block pass pieces of data to that block?
 
@@ -153,6 +157,7 @@ p arr.map { |n| n.to_s }
 ```
 
 20. What are Procs and lambdas? How are they different?
+Both are Proc objects, lambda's are a type of Proc with strict arity.
 
 21. How can we return a Proc from a method or block?
 
@@ -295,8 +300,7 @@ bloc = proc { puts "hi" }
 
 p some_method(bloc)
 ```
--------- Left off here ON MY OWN ------ 
-11. How do we fix the following code so the output is true? Explain
+11. How do we fix the following code so the output is true? Explain - DONE
 ```ruby
 def some_method(block)
   block_given? # we want this to return `true`
@@ -317,7 +321,7 @@ end
 bloc = proc { p "hi" } # do not alter
 some(bloc)
 ```
-
+-------- Left off here ON MY OWN ------ 
 13. What does the following code tell us about lambda's? (probably not assess on this but good to know)
 ```ruby
 bloc = lambda { p "hi" }
