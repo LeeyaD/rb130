@@ -129,11 +129,13 @@ end
     @car = Car.new
   end
 ```
-The `setup` method will be called before running every test, allows us to setup the code we're running our assertions against rather than adding setup code to each & every test method. 
+The `setup` method is called before running every test, it allows us to setup the code we’re running our assertions against rather than adding setup code to each & every test method.
 
-There is a `teardown` method (which we don't have) that's called after running every test. In our case, we don't have any tear down activity, so it's not necessary. In some cases, we will need a tear down for cleaning up files or logging some information, or closing database connections.
+There is a `teardown` method (which we don't have) that's called after running every test. In some cases, we will need a tear down for cleaning up files or logging some information, or closing database connections.
 
-Simplest cases don't need either setup or tear down, just remember there are 4 steps to running any test. At the minimum, you'll need EA, even if the E is just a simple object instantiation.
+Simplest cases don't need either setup or tear down. At the minimum, we'll need EA, even if `E` is a simple object instantiation.
+
+When using `setup` we assign the instantiated an object to an instance variable this way our tests--which are instance methods--have access to it
 
 ### Testing Equality
 `assert_equal` tests for *value* equality. We're invoking the `==` method on the object. 
