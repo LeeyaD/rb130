@@ -1,12 +1,12 @@
-1. What are closures? - DONE
+1. What are closures?
 A programming concept, it refers to a piece of code that's saved and executed at a later time. Upon their creation closures bind to their surrounding artifacts; retaining references to initialized variables, methods, objects, etc. that were in-scope at the time. There are 3 ways to work with closures and that's (1) instantiating an object from the Proc class, (2) using blocks*, and (3) using lambdas. 
 *blocks are not objects and, therefore, can't be saved. Although this contradicts part of our definition for closures, it's okay for the course.
 
-2. What is binding? - DONE
+2. What is binding?
 A retained reference to the surrounding environment/context, specifically the artifacts (i.e. variables, methods, objects, etc) that are in-scope.
 
-3. How do closures interact with variable scope? - DONE
- A closure's binding adheres to variable scoping rules in that it only retains references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
+3. How do closures interact with variable scope?
+ A closure's binding retains references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
  ```ruby
  name = "Leeya"
  def a_method(suffix)
@@ -31,7 +31,7 @@ A retained reference to the surrounding environment/context, specifically the ar
  ```
 
 
-4. How do blocks work? - DONE
+4. How do blocks work?
 Defined with the keywords `do`..`end` or curly braces `{}`, blocks directly following the invocation of a method are passed to the method as an implicit argument. If the keyword `yield` is included in the method's implementation, code execution will jump from the method to the block to run the code there, then execution returns to the method to continue from where it left off. 
 
 Blocks can have parameters and due to a block's lenient arity, no errors are raised if too many or too few arguments are passed to it. When passed more arguments than there are block parameters, the block will ignore the extra arguments. When passed fewer arguments than there are block parameters, the block will set its extra parameters to `nil`).
@@ -47,7 +47,7 @@ a_method { |name1, name2, name3| puts "#{name1}, #{name2}, and #{name3}"}
 
 ```
 
-* What are blocks used for? Give examples of specific use cases - DONE
+* What are blocks used for? Give examples of specific use cases
  > 1. When we want to defer some implementation code to method invocation decision. 
  When we (the method implementors) aren't 100% sure what the 'method caller' wants to do. We provide the ability to refine the method implementation without modifying it for others.
  For example, the `#each` method iterates thru a collection, passing each element in the collection to the block to be executed however the method caller. wants since that part of the method's implementation has been left up to them.
@@ -80,19 +80,19 @@ end
 ```
 
 
-7. When can you pass a block to a method? Why? - DONE
+7. When can you pass a block to a method? Why?
 Anytime because all Ruby methods can take an optional block as an implicit argument (meaning the method doesn't need to specify the block in its argument list or even execute it at all).
 
-8. How do we make a block argument manditory? - DONE
+8. How do we make a block argument manditory?
 By using the Ruby keyword `yield` in our method implmentation. When the method is invoked without a block argument a `LoadJumpError` will be raised.
 
 
-9. How do methods access both implicit and explicit blocks passed in? - DONE
+9. How do methods access both implicit and explicit blocks passed in?
 Implicit blocks can be accessed if a method is defined with the `yield` keyword.
 Explicit blocks can be accessed either by calling `Proc#call` on it to execute its code or by name (dropping the unary `&` from the param) to manage like any other object.
 
 
-10. What is `yield` in Ruby and how does it work? - DONE
+10. What is `yield` in Ruby and how does it work?
 It's a keyword that we use in method implmenetation that allows us to execute implicitly passed blocks. We can also pass objects to the executed blocks using regular Ruby method-argument syntax.
 ```ruby
 def a_method
@@ -106,27 +106,26 @@ end
 a_method { |name| puts "hello, #{name}" }
 ```
 
-11. How do we check if a block is passed into a method? - DONE
+11. How do we check if a block is passed into a method?
 We can call `Kernel#block_given?` which will return `true` if a block has been passed in or `false` otherwise.
 
-12. Why is it important to know that methods and blocks can return closures? - DONE
+12. Why is it important to know that methods and blocks can return closures?
 Because a returned closure (Proc or lambda) can be saved to a variable, which can then be managed like any other object. It's the programming concept in action; chunks of code that can be saved and executed later.
 *mention bindings being passed around too
 
-13. What are the benefits of explicit blocks? - DONE
+13. What are the benefits of explicit blocks?
 The increased flexibility. When they become named objects we can pass them around, reassign them, and execute them at a later time--as many times as we want--in other scopes.
 
-14. Describe the arity differences of blocks, procs, methods and lambdas. - DONE
+14. Describe the arity differences of blocks, procs, methods and lambdas.
 Arity refers to the rule regarding the number of arguments that have to be passed.
 Blocks & Procs have **lenient arity** which means no errors are raised if too many or too few arguments are passed to them. When passed more arguments than there are parameters, they'll ignore the extra arguments. When passed fewer arguments than there are parameters, they'll set their extra parameters to `nil`).
 Methods & Lambdas have **strict** arity, meaning the number of arguments passed must match the number of parameters being defined, otherwise, an ArgumentError will be raised.
 
----- All notes up to here have been added to Anki deck ---------
------ LEFT OFF HERE---------
-# REVIEW once more, THEN ADD to Anki deck
-16. What does the unary`&` do when in the method parameter? / How do we specify a block argument explicitly?
-Prepended to a method parameter, it creates an optional explicit block parameter that converts a block argument into a "simple" Proc object if one is provided. This allows us to manage the block, which is now a Proc object, within the method like any other object* -- it can be reassigned, passed to other methods, and invoked many times.
-*`&` is dropped when referring to the parameter inside the method.
+15. How do we specify a block argument explicitly?
+By prepending the unary & to a parameter in a method definition.
+
+16. What does the unary`&` do when in the method parameter?
+Prepended to a method parameter, it creates an optional explicit block parameter that converts a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
 ```ruby
 def a_method(&block)
   block.call
@@ -136,14 +135,31 @@ a_method { puts "I'm a block turned proc" }
 ```
 
 17. What does `&` do when in a method invocation argument?
-When applied to an argument object for a method, a unary `&` causes ruby to try to convert that object to a block. * If that object is a proc, the conversion happens automatically.
-* If the object is not a proc, then `&` attempts to call the `#to_proc` method on the object first and then converts that proc to a block. 
+When applied to an argument object for a method, a unary `&` causes ruby to try to convert the object to a block. If the object is a proc, the conversion happens automatically. If the object is not a proc, then Ruby attempts to call `#to_proc` on the object first, then `&` will convert that proc to a block. If there is no `#to_proc` method provided by the object's class a `TypeError` is raised. 
 
 
-18. How do we utilize the return value of a block? How can methods that take a block pass pieces of data to that block?
+18. How do we utilize the return value of a block?
+By assigning it to a variable.
+```ruby
+def a_method
+  a_var = yield
+  puts a_var
+end
 
-# REVIEW once more, THEN ADD to Anki deck
-19. What is Symbol#to_proc and how is it used?
+a_method { "Leeya" }
+```
+
+19. How can methods that take a block pass pieces of data to that block?
+By yielding, with arguments, to the block.
+```ruby
+def a_method
+  yield("Leeya")
+end
+
+a_method { |name| puts name }
+```
+
+20. What is Symbol#to_proc and how is it used?
 ```ruby
 arr = [1, 2, 3, 4, 5]
 p arr.map(&:to_s) # specifically `&:to_s`
@@ -156,11 +172,32 @@ p arr.map { |n| n.to_s }
 # then converts that proc to a block. This is the "symbol to proc" operation (though perhaps it should be called "symbol to block")
 ```
 
-20. What are Procs and lambdas? How are they different?
-Both are Proc objects, lambda's are a type of Proc with strict arity.
+21. What are Procs and lambdas? How are they different?
+Both are Proc objects. Lambda's are a type of Proc that has strict arity while Proc's have lenient.
+Lambda's also `return` to their calling method rather than returning immediately like Procs.
+```ruby
 
-21. How can we return a Proc from a method or block?
+def proc_demo_method
+  proc_demo = Proc.new { return "Only I print!" }
+  proc_demo.call
+  "But what about me?" # Never reached
+end
+ 
+puts proc_demo_method # Only I print!
+# (Notice that the proc breaks out of the method when it returns the value.)
+ 
+def lambda_demo_method
+  lambda_demo = lambda { return "Will I print?" }
+  lambda_demo.call
+  "Sorry - it's me that's printed."
+end
+ 
+puts lambda_demo_method # Sorry - it's me that's printed.
+# (Notice that the lambda returns back to the method in order to complete it.)
+```
 
+22. How can we return a Proc from a method or block?
+By making sure it’s the last line of code to be evaluated.
 
 ### Blocks and variable scope
 - **What is variable scope?**
@@ -173,7 +210,7 @@ Both are Proc objects, lambda's are a type of Proc with strict arity.
 
 
 # Practice Problems
-1. What is happening in the code below? - DONE
+1. What is happening in the code below?
 ```ruby
 arr = [1, 2, 3, 4, 5]
 
@@ -187,7 +224,7 @@ p arr.map { |n| n.to_s }
 # then converts that proc to a block. This is the "symbol to proc" operation (though perhaps it should be called "symbol to block")
 ```
 
-2. How do we get the desired output without altering the method or the method invocations? - DONE
+2. How do we get the desired output without altering the method or the method invocations?
 ```ruby
 def call_this
   yield(2)
@@ -201,7 +238,7 @@ p call_this(&to_s) # => returns 2
 p call_this(&to_i) # => returns "2"
 ```
 
-3. What concept does the following code demonstrate? - DONE
+3. What concept does the following code demonstrate?
 ```ruby
 def time_it
   time_before = Time.now
@@ -278,7 +315,7 @@ end
 a = 'friend'
 a_method(&a)
 ```
--------- Left off here w/ OSCAR ------ 
+
 9. Why does the following code raise an error?
 ```ruby
 def some_method(block)
@@ -300,7 +337,7 @@ bloc = proc { puts "hi" }
 
 p some_method(bloc)
 ```
-11. How do we fix the following code so the output is true? Explain - DONE
+11. How do we fix the following code so the output is true? Explain
 ```ruby
 def some_method(block)
   block_given? # we want this to return `true`
@@ -321,7 +358,6 @@ end
 bloc = proc { p "hi" } # do not alter
 some(bloc)
 ```
--------- Left off here ON MY OWN ------ 
 13. What does the following code tell us about lambda's? (probably not assess on this but good to know)
 ```ruby
 bloc = lambda { p "hi" }
@@ -352,7 +388,6 @@ lambda_return #=> "Before lambda call."
 proc_return #=> "Before proc call."
 ```
 
-### Problems Andrew wrote during 1:1
 ```ruby
 name = 'Santa'
 
@@ -399,64 +434,134 @@ my_proc = Proc.new { puts "hello" }
 a_method(&my_proc) #== a_method { puts "hello" }
 ```
 
-
 ## Testing With Minitest
 G. What is Minitest? How do we get access to it?
+A testing framework for Ruby that used to be distributed with it. It's a RubyGem so we can access it using the `gem install` command which will connect to the remote RubyGems Library where the specified gem is downloaded & installed to our local file system.
 
-# REVIEW once more, THEN ADD to Anki deck
 1. What is a test suite?
 The entire set of tests that accompany a program or application; all the tests for a project.
 
-# REVIEW once more, THEN ADD to Anki deck
 2. What is a test?
-* - A situation or context in which verification checks are made. For example, making sure a task is marked done after executing a method that's expected to perform that function.
+A situation or context in which verification checks are made. For example, making sure a task is marked done after executing a method that's expected to perform that function.
 
-# REVIEW once more, THEN ADD to Anki deck
 3. What is Domain Specific Language (DSL)? 
-*ask Andrew, seems like it's not to be thought of like Ruby or Python cause Minitest is Ruby but it "can use" a DSL? What does that even mean? "can use a DSL" like we can write it in expectation-style???
+A specialized language used for a specific purpose, to solve a specific problem. It can be made for programmers or general users.
 
+4. What do testing frameworks provide?
+A way to test the quality of our code and an easier time debugging. Using the structure provided by the framework, we’re able to setup a situation for our code and test what we expect our code to do against what actually happens. If the code behaves in a way we weren't expecting, we can use the information from the failed test to help debug our code.
 
-4. What do testing framworks provide?
-
-# REVIEW once more, THEN ADD to Anki deck
 5. What is regression testing?
 The process of checking for errors that occur in existing code after changes are made somewhere in the codebase.
 
-# REVIEW once more, THEN ADD to Anki deck
-6. What is code coverage? / ...and how is it used? What tools can you use to gauge code coverage for yourself?
-How much of our actual program code (all of it, public & private) is tested by a test suite. We can test for this with the RubyGem, `simplecov`.
+6. What is code coverage? How is it used?
+Refers to how much of our actual program code (public & private) is tested by a test suite. It's used to inform us, the developer, to where to add more tests so that the code coverage gets closer to 100%.
 
-# REVIEW once more, THEN ADD to Anki deck
-7. What are the differences of Minitest vs RSpec? / What are the different styles of Minitest?
- > RSpec
-* a DSL testing tool written in the programming language Ruby to test Ruby code
-* a unit test framework for the Ruby programming language
-* written to be read like English
-* can also use a DSL?? but it can also be used in a way that reads like ordinary Ruby code without a lot of magical syntax. 
- > Minitest
-* used to be bundled with Ruby
+7. What tools can you use to gauge code coverage for yourself?
+We can use the RubyGem, `simplecov`. When executed, a directory-`coverage`-is created and from the `index.html` file we get a report on what percentage of our code is covered as well as which lines of code.
 
-8. What is the SEAT approach? / ...and what are its benefits?
+8. What are the differences of Minitest vs RSpec?
+RSpec are both testing tools written in the programming language Ruby to test Ruby code. 
+RSpec is a DSL that uses code that reads like English
+Minitest lets us use normal Ruby syntax but it can also use a DSL.
 
-9. When does setup and tear down happen when testing?
-
-# REVIEW once more, THEN ADD to Anki deck
-10. What are assertion? / How do they work?
-* - the verification step in testing. It's when we verify that the data returned by our program/application is what is expected.
-* - you make one or more assertions within a test.
-
-G. Give some examples of common assertions and how they are used.
-
-11. What is the difference of assertion vs refutation methods?
-Their writing styles are opposite; assertions pass when they
-
-# REVIEW once more, THEN ADD to Anki deck
-12. How does assert_equal compare its arguments?
-Using the expected object's `#==` method (e.g.; `Array#==`, `String#==`, etc.). If the expected object is from a custom class, the `#==` method must be defined.
+9. What are the different styles of Minitest?
+Minitest has two different styles: 
+* Expectation style, which uses a DSL and is more like RSpec, uses describe blocks to group individual tests that begin with the `it` method. These *spec-style* tests use expectation matchers instead of assertions.
+* Assert-style, written using regular Ruby code, does not group individual tests. Furthermore, each test starts with `test_` and uses one or more assertions.
 
 
+9. What is the SEAT approach?
+The 4 steps to writing a test:
+1. Set up the necessary objects. 
+```ruby
+def setup    
+	@car = Car.new  
+end
+```
+2. Execute the code against the object we’re testing. 
+Sometimes just a simple object instantiation.
+3. Assert the results of the execution. 
+4. Tear down and clean up any lingering artifacts.
 
 
+10. What are the benefits to the SEAT approach?
+The `setup` method allows us to setup the code we’re running our assertions against rather than adding setup code to each & every test method. And in some cases, the `teardown` method is handy when we need to clean up files, log information, or close database connections.
+
+10. When does setup and tear down happen when testing?
+The `setup` method is called before running every test.
+The `teardown` method is called after running every test.
+
+11. What is an assertion?
+The verification step in testing. It verifies that the data returned by our program/application is what is expected. There can be one or more verification steps within a test.
+
+12. Give some examples of common assertions and how they are used. - Added to Anki individually
+```ruby
+def test_car_exists
+  car = Car.new
+  assert(car)
+end
+# `assert(test)` Fails unless test is truthy.
+```
+
+```ruby
+def test_wheels
+  car = Car.new
+  assert_equal(4, car.wheels)
+end
+# `assert_equal(exp, act)`	Fails unless exp == act.
+```
+
+```ruby
+def test_name_is_nil
+  car = Car.new
+  assert_nil(car.name)
+end
+# `assert_nil(obj)`	Fails unless obj is nil.
+```
+
+```ruby
+def test_raise_initialize_with_arg
+  assert_raises(ArgumentError) do
+    car = Car.new(name: "Joey")
+  end
+end
+# `assert_raises(*exp) { ... }`	Fails unless block raises one of *exp.
+# this code raises ArgumentError, so this assertion passes
+```
+
+```ruby
+def test_instance_of_car
+  car = Car.new
+  assert_instance_of(Car, car)
+end
+```
+`assert_instance_of(cls, obj)`	Fails unless obj is an instance of cls.
+This test is more useful when dealing with inheritance. 
+
+
+```ruby
+def test_includes_car
+  car = Car.new
+  arr = [1, 2, 3]
+  arr << car
+
+  assert_includes(arr, car)
+end
+
+# assert_includes calls assert_equal in its implementation, and Minitest counts that call as a separate assertion. For each assert_includes call, you will get 2 assertions, not 1.
+```
+`assert_includes(collection, obj)`	Fails unless collection includes obj.
+
+
+13. What is the difference of assertion vs refutation methods?
+They're opposites in their verifications; assertions assert that what occurs is what is expected, meanwhile refutations refute that what occurs is NOT what is expected.
+
+14. How does assert_equal compare its arguments?
+Testing for *value equality*, it uses the expected object's `#==` method. If the expected object is from a custom class, the `#==` method must be defined.
+
+
+---- All notes up to here have been added to Anki deck ---------
+----- LEFT OFF HERE---------
 ### Purpose of core tools
 # REVIEW once more, THEN ADD to Anki deck
 1. What are the purposes of core tools? / How do the Ruby tools relate to one another?
