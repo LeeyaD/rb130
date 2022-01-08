@@ -125,7 +125,7 @@ Methods & Lambdas have **strict** arity, meaning the number of arguments passed 
 By prepending the unary & to a parameter in a method definition.
 
 16. What does the unary`&` do when in the method parameter?
-Prepended to a method parameter, it creates an optional explicit block parameter that converts a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
+Prepended to a method parameter, it creates an optional explicit block parameter that save a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
 ```ruby
 def a_method(&block)
   block.call
@@ -176,7 +176,6 @@ p arr.map { |n| n.to_s }
 Both are Proc objects. Lambda's are a type of Proc that has strict arity while Proc's have lenient.
 Lambda's also `return` to their calling method rather than returning immediately like Procs.
 ```ruby
-
 def proc_demo_method
   proc_demo = Proc.new { return "Only I print!" }
   proc_demo.call
@@ -416,15 +415,9 @@ def my_method(&block)
 end
 
 my_method(&my_proc)
+```
 
-# 4. 
-def my_method(arr, num, string, &block)
-  block.call
-end
-
-my_method([], 14, 'string') { puts name }
-
-# 5.
+```ruby
 def a_method(&a_block)
   a_block.call
 end
@@ -436,7 +429,7 @@ a_method(&my_proc) #== a_method { puts "hello" }
 
 ## Testing With Minitest
 G. What is Minitest? How do we get access to it?
-A testing framework for Ruby that used to be distributed with it. It's a RubyGem so we can access it using the `gem install` command which will connect to the remote RubyGems Library where the specified gem is downloaded & installed to our local file system.
+A testing framework for Ruby that used to be distributed with it. It's a RubyGem so we can access it using the `gem install` command which will connect to the remote RubyGems Library where it's downloaded & installed to our local file system. To use it in our Ruby project, we `require minitest/autorun` at the top of our test file.
 
 1. What is a test suite?
 The entire set of tests that accompany a program or application; all the tests for a project.
@@ -457,7 +450,7 @@ The process of checking for errors that occur in existing code after changes are
 Refers to how much of our actual program code (public & private) is tested by a test suite. It's used to inform us, the developer, to where to add more tests so that the code coverage gets closer to 100%.
 
 7. What tools can you use to gauge code coverage for yourself?
-We can use the RubyGem, `simplecov`. When executed, a directory-`coverage`-is created and from the `index.html` file we get a report on what percentage of our code is covered as well as which lines of code.
+We can use the RubyGem, `simplecov`. When executed, a directory-`coverage`-is created and from the `index.html` file we get a report on what percentage of our code is covered specifically which lines of code.
 
 8. What are the differences of Minitest vs RSpec?
 RSpec are both testing tools written in the programming language Ruby to test Ruby code. 
@@ -492,7 +485,7 @@ The `setup` method is called before running every test.
 The `teardown` method is called after running every test.
 
 11. What is an assertion?
-The verification step in testing. It verifies that the data returned by our program/application is what is expected. There can be one or more verification steps within a test.
+The verification step in testing. It verifies that the data returned by our program/application is what is expected. There can be one or more verification steps within a test and all assertion methods accept a `msg` which is printed if the assertion fails.
 
 12. Give some examples of common assertions and how they are used. - Added to Anki individually
 ```ruby
@@ -500,7 +493,7 @@ def test_car_exists
   car = Car.new
   assert(car)
 end
-# `assert(test)` Fails unless test is truthy.
+# `assert(test, msg = nil)` Fails unless test is truthy.
 ```
 
 ```ruby
@@ -508,7 +501,7 @@ def test_wheels
   car = Car.new
   assert_equal(4, car.wheels)
 end
-# `assert_equal(exp, act)`	Fails unless exp == act.
+# `assert_equal(exp, act, msg = nil)`	Fails unless exp == act.
 ```
 
 ```ruby
@@ -516,7 +509,7 @@ def test_name_is_nil
   car = Car.new
   assert_nil(car.name)
 end
-# `assert_nil(obj)`	Fails unless obj is nil.
+# `assert_nil(obj, msg = nil)`	Fails unless obj is nil.
 ```
 
 ```ruby
@@ -525,7 +518,7 @@ def test_raise_initialize_with_arg
     car = Car.new(name: "Joey")
   end
 end
-# `assert_raises(*exp) { ... }`	Fails unless block raises one of *exp.
+# `assert_raises(*exp, msg = nil) { ... }`	Fails unless block raises one of *exp.
 # this code raises ArgumentError, so this assertion passes
 ```
 
@@ -535,7 +528,7 @@ def test_instance_of_car
   assert_instance_of(Car, car)
 end
 ```
-`assert_instance_of(cls, obj)`	Fails unless obj is an instance of cls.
+`assert_instance_of(cls, obj, msg = nil)`	Fails unless obj is an instance of cls.
 This test is more useful when dealing with inheritance. 
 
 
@@ -550,63 +543,67 @@ end
 
 # assert_includes calls assert_equal in its implementation, and Minitest counts that call as a separate assertion. For each assert_includes call, you will get 2 assertions, not 1.
 ```
-`assert_includes(collection, obj)`	Fails unless collection includes obj.
+`assert_includes(collection, obj, msg = nil)`	Fails unless collection includes obj.
 
 
-13. What is the difference of assertion vs refutation methods?
-They're opposites in their verifications; assertions assert that what occurs is what is expected, meanwhile refutations refute that what occurs is NOT what is expected.
+13. What is the difference between assertion vs refutation methods?
+They're opposites in their verifications. Assertions verify that what occurs is what is expected and refutations verify that what occurs is NOT what is expected.
 
 14. How does assert_equal compare its arguments?
 Testing for *value equality*, it uses the expected object's `#==` method. If the expected object is from a custom class, the `#==` method must be defined.
 
 
----- All notes up to here have been added to Anki deck ---------
------ LEFT OFF HERE---------
 ### Purpose of core tools
-# REVIEW once more, THEN ADD to Anki deck
-1. What are the purposes of core tools? / How do the Ruby tools relate to one another?
-Collectively core tools help us build our Ruby projects from beginning to end. Each core tool has its own unique function and is used as needed, at different points of our project's development.
-
-# REVIEW once more, THEN ADD to Anki deck
-G. What are Ruby Version Managers? Why do we need them? Give some exampled of available Ruby Version Managers and what they can do for you.
-They're programs that manage multiple versions of Ruby, the utilities (such as irb) associated with each version, and the RubyGems installed for each Ruby. They allow us to install and uninstall ruby versions and gems, and run specific versions of ruby with specific programs and environments.
-
-# REVIEW once more, THEN ADD to Anki deck
-3. What are RubyGems and why are they useful? / What are RubyGems? How are they used? Where can you find them? How do you manage them in your own environment? How do you include them in projects you create?
-Also called 'gems', they're packages of code that we can download, install, and use in our Ruby programs or from the command line. There are thousands of gems availabl, so which ones we use depends entirely on our needs. For example, the `pry` gem helps debug Ruby programs while `rubocop` checks for Ruby style guide violations and other potential issues in our code.
-
-# REVIEW once more, THEN ADD to Anki deck
-4. What is Bundler? What does it do and why is it useful?
-Bundler lets us describe exactly which Ruby and Gems we want to use with our Ruby apps. Specifically, it lets us install multiple versions of each Gem under a specific version of Ruby and then use the proper version in our app.
+1. **What are Ruby Version Managers? Why do we need them?**
+They're programs that install, uninstall, and manage multiple versions of Ruby, the utilities (such as irb) associated with each version, and the RubyGems installed for each Ruby. They're needed because sometimes we need to run specific versions of ruby with certain programs and environments.
+For example, when collaborating on a project with other developers, it's important to agree on what version of Ruby will be used. This ensures that different parts of the code base don't become incompatible. Being able to switch between versions-with ease-to work on various projects is a must.
 
 
-5. What is Rake? What does it do and why is it useful?
-It automates many common functions required to build, test, package, and install programs
+2. **Give some examples of available Ruby Version Managers and what they can do for you.**
+RVM manages and installs different versions of Ruby and gemsets, and has more features-like it's own built-in Ruby installation mechanism. It manages project dependencies in one of two ways; the conventional way by using gemsets or by using Bundler. RVM meets the requirements to manage large and complex projects.
 
-a tool that you use to perform repetitive development tasks, such as running tests, building databases, packaging and releasing the software, etc. The tasks that Rake performs are varied, and frequently change from one project to another; you use the Rakefile file to control which tasks your project needs.
+Rbenv only *manages* different ruby versions. It doesn't manage gemsets nor install different Ruby versions, these features are handled by third-party tools called "plug-ins" and can be acquired by installing them. For example, rbenv doesn't have it's own built-in Ruby installation mechanism but the plug-in `ruby-build` installs the versions for us. Rbenv also manages project dependencies in one of two ways; using a plug-in called `rbenv-gemsets` which is the RVM `gemset` equivalent or via Bundler. rbenv is considered a lightweight tool, since it lacks the built-in features required to manage large projects, and--used alone--more suitable for working on simple and small Ruby projects.
 
-Set up required environment by creating directories and files
-Set up and initialize databases
-Run tests
-Package your application and all of its files for distribution
-Install the application
-Perform common Git tasks
-Rebuild certain files and directories (assets) based on changes to other files and directories
-In short, you can write Rake tasks to automate anything you may want to do with your application during the development, testing, and release cycles.
 
-very project that aims to produce a finished project that either you or other people intend to use in the future has repetitive tasks the developer needs. For instance, to release a new version of an existing program, you may want to:
+3. **What are RubyGems? How are they used? Where can you find them?**
+Also simply called 'gems', they're packages of code that we can download, install, and use in our Ruby programs or from the command line. They're used to add functionality to our Ruby programs. They're found on the Ruby community's gem hosting service RubyGem.org. 
 
-Run all tests associated with the program.
-Increment the version number.
-Create your release notes.
-Make a complete backup of your local repo.
-Each step is easy enough to do manually, but you want to make sure you execute them in the proper order (for instance, you want to set the new version number before you commit your changes). You also don't want to be at the mercy of arbitrary typos that may do the wrong thing. It's far better to have a way to perform these tasks automatically with just one command, which is where Rake becomes extremely useful.
 
-G. What is the RubyGems format for projects?
-G. What is a .gemspec file?
+4. **How do you manage RubyGems in your own environment?**
+Ruby-version 1.9 or higher-includes a `gem` program that allows us to connect to the remote RubyGem library and-thru the use of various commands-manage downloaded gems on our local file system.
 
-# REVIEW once more, THEN ADD to Anki deck
-6. What constitues a Ruby project?
+
+5. **How do you include RubyGems in projects you create?**
+If we're using gems in our Ruby programs, we `require` them (e.g., `require pry` at the top of our .rb file) or from the command line `rubocop` checks for Ruby style guide violations and other potential issues in our code.
+
+
+6. **What is Bundler? What does it do and why is it useful?**
+Bundler is a dependency manager, it lets us describe exactly which Ruby and Gems we want to use with our Ruby apps. Specifically, it lets us install multiple versions of each Gem-including their gem dependencies-under a specific version of Ruby and then use the proper version in our app.
+
+
+6. **What is Rake? What does it do and why is it useful?**
+A RubyGem that automates tasks. It automates many common functions required to build, test, package, and install programs. Such as running tests, building databases, packaging and releasing the software, etc. 
+
+For example, to release a new version of an existing program, you may want to:
+* Run all tests associated with the program.
+* Increment the version number.
+* Create your release notes.
+* Make a complete backup of your local repo.
+
+By automating tasks with Rake: we ensure steps are executed in a proper order (e.g., setting the new version number before committing changes); we won't be at the mercy of typos that may do the wrong thing; and we don't have to try to remember each and every step ourselves.
+
+
+G. **What is the RubyGems format for projects?**
+How should files be set up in your project; test files, lib, file
+
+
+G. **What is a .gemspec file?**
+It's a file that's included if we're creating our own gems. It lists specifications for our gem, version numbers
+
+
+7. **What constitues a Ruby project?**
 A collection of one or more files used to develop, test, build, and distribute software. The software may be an executable program, a library module, or a combination of programs and library files. The project itself includes the source code (not only Ruby source code, but any language used by the project, such as JavaScript), tests, assets, HTML files, databases, configuration files, and more.
 
 
+8. **What is the purpose of core tools? / How do the Ruby tools relate to one another?**
+Collectively core tools help us build our Ruby projects from beginning to end. Each core tool has its own unique function and is used as needed, at different points of our project's development.
