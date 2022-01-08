@@ -24,9 +24,31 @@ ALGO:
 - return counter
 =end
 
+# def count(array)
+#   true_count = 0
+#   array.each { |el| true_count += 1 if yield(el) }
+#   true_count
+# end
+=begin
+Further Exploration
+Write a version of the count method that meets the conditions of this exercise, but also does not use each, loop, while, or until.
+
+ALGO:
+- create a method that takes 1 arg, an array, and a block
+- initialize variable to size of array minus 1
+- initialize a counter to zero
+- counting up from zero, using the count & elemental reference
+-- yield each array element to the block
+-- if the block returns true, increment the counter by 1
+-- if the block returns false, iterate to next element in array
+- return counter
+
+=end
+
 def count(array)
+  size = array.size - 1
   true_count = 0
-  array.each { |el| true_count += 1 if yield(el) }
+  0.upto(size) { |num| true_count += 1 if yield(array[num]) }
   true_count
 end
 
