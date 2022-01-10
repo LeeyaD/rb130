@@ -26,8 +26,8 @@ ALGO
 
 def each_cons(array)
   n = 2
-  array.each_with_index do |_, idx|
-    break unless array[idx, n].size == n
+  0.upto(array.size-1) do |idx|
+    break if array[idx, n].size < n
     yield(array[idx, n])
   end
   return nil
