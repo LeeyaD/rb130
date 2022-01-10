@@ -117,7 +117,7 @@ Because a returned closure (Proc or lambda) can be saved to a variable, which ca
 The increased flexibility. When they become named objects we can pass them around, reassign them, and execute them at a later time--as many times as we want--in other scopes.
 
 14. Describe the arity differences of blocks, procs, methods and lambdas.
-Arity refers to the rule regarding the number of arguments that have to be passed to a block, proc or lambda.
+Arity refers to the rule regarding the number of arguments that have to be passed to a block, proc or lambdatouch.
 Blocks & Procs have **lenient arity** which means no errors are raised if too many or too few arguments are passed to them. When passed more arguments than there are parameters, they'll ignore the extra arguments. When passed fewer arguments than there are parameters, they'll set their extra parameters to `nil`).
 Methods & Lambdas have **strict** arity, meaning the number of arguments passed must match the number of parameters being defined, otherwise, an ArgumentError will be raised.
 
