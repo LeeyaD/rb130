@@ -336,6 +336,7 @@ bloc = proc { puts "hi" }
 
 p some_method(bloc)
 ```
+
 11. How do we fix the following code so the output is true? Explain
 ```ruby
 def some_method(block)
@@ -607,3 +608,7 @@ A collection of one or more files used to develop, test, build, and distribute s
 
 8. **What is the purpose of core tools? / How do the Ruby tools relate to one another?**
 Collectively core tools help us build our Ruby projects from beginning to end. Each core tool has its own unique function and is used as needed, at different points of our project's development.
+
+
+# Course Feedback
+* Add a section on how Ruby looks for variables vs. methods, especially in the case of closures. Specifically, how it's key to why a Proc object can find a method defined after it was created (contrary to binding rules)
