@@ -226,7 +226,7 @@ call_me(chunk_of_code)
 The `Proc` object kept track of its **binding** (surrounding environment/context), so that it had all the information it needed to be executed later on.
 **Bindings** include; local variables, method references, constants and other artifacts -- whatever it needs to execute correctly.
 
-**Important note:**any local variables being accessed by a closure must be defined before the closure is created. Only exception is if the local variable is explicitly passed to the closure when it is called (e.g., `some_proc.call(some_variable)`). If we remove `name = "Robert"` in the code above, it'd change the binding of the `Proc` object & `name` would no longer be *in scope* since it is initialized after the `Proc` is instantiated.
+**Important note:** any local variables being accessed by a closure must be defined before the closure is created. Only exception is if the local variable is explicitly passed to the closure when it is called (e.g., `some_proc.call(some_variable)`). If we remove `name = "Robert"` in the code above, it'd change the binding of the `Proc` object & `name` would no longer be *in scope* since it is initialized after the `Proc` is instantiated.
 
 Srdjan: If we try to invoke a method without an explicit caller and without parentheses, Ruby will *first* check to see if there is a local variable of that name within scope (which in the case of a block includes it's binding), if there is then Ruby will return the object referenced by the local variable, if not it will attempt to call a method of that name on self. 
 

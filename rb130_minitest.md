@@ -13,6 +13,13 @@ Minitest can use a DSL (expectation syntax) and it can also use assertion-style 
 **Test:** The situation or context in which tests are run. A test can contain multiple assertions.
 **Assertion:** The verification step to confirm that the data returned by our program/application is what is expected. You make one or more assertions within a test.
 
+#### Colorize
+Add the following towards the top after `require 'minitest/autorun'`
+```ruby
+require "minitest/reporters"
+Minitest::Reporters.use!
+```
+
 #### Test File
 ```ruby
 require 'minitest/autorun'      # loads all necessary files from minitest gem
