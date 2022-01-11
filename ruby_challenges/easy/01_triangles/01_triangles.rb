@@ -51,11 +51,12 @@ Method: kind
 =end
 
 class Triangle
-  attr_accessor :sides
+  attr_accessor :sides, :kind
 
   def initialize(side1, side2, side3)
     @sides = [side1, side2, side3]
     validate_triangle
+    @kind = determine_kind
   end
 
   def validate_triangle
@@ -71,18 +72,13 @@ class Triangle
   def two_sides_greater_than_one?
     sides[0] + sides[1] > sides[2] &&
     sides[1] + sides[2] > sides[0] &&
-    sides[0] + sides[2] > sides[1]
+    sides[2] + sides[0] > sides[1]
   end
 
-  def kind
-    triangle = if equilateral?
-                 'equilateral'
-                elsif !equilateral? && isosceles?
-                 'isosceles'
-                elsif scalene?
-                 'scalene'
-                end
-    triangle
+  def determine_kind
+    return 'equilateral' if equilateral?
+    return 'isosceles' if !equilateral? && isosceles?
+    return 'scalene' if scalene?
   end
 
   def equilateral?
@@ -90,14 +86,10 @@ class Triangle
   end
 
   def isosceles?
-    sides[0] == sides[1] ||
-    sides[1] == sides[2] ||
-    sides[0] == sides[2]
+    sides.uniq.size == 2
   end
 
   def scalene?
-    sides[0] != sides[1] &&
-    sides[1] != sides[2] &&
-    sides[0] != sides[2]
+    sides.uniq.size == 3
   end
 end
