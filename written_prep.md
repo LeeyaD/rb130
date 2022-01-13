@@ -430,7 +430,7 @@ a_method(&my_proc) #== a_method { puts "hello" }
 
 ## Testing With Minitest
 G. What is Minitest? How do we get access to it?
-A testing framework for Ruby that used to be distributed with it. It's a RubyGem so we can access it using the `gem install` command which will connect to the remote RubyGems Library where it's downloaded & installed to our local file system. To use it in our Ruby project, we `require minitest/autorun` at the top of our test file.
+A testing framework for Ruby that used to be distributed with it. It's a RubyGem so we can access it using the `gem install` command which will connect to the remote RubyGems Library where it's downloaded & installed to our local file system. To use it in our Ruby project, we `require minitest/autorun` at the top of our test file and `require_relative` our Ruby file.
 
 1. What is a test suite?
 The entire set of tests that accompany a program or application; all the tests for a project.
