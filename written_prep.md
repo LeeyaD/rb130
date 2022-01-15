@@ -5,9 +5,8 @@ A programming concept, it refers to a piece of code that's saved and executed at
 2. What is binding?
 A retained reference to the surrounding environment/context, specifically the artifacts (i.e. variables, methods, objects, etc) that are in-scope.
 
-3. How do closures interact with variable scope?
-How does binding affect the scope of closures?
- A closure's binding retains references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
+3. How does binding affect the scope of closures?
+ A closure's binding retains references to surrounding artifacts at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
  ```ruby
  name = "Leeya"
  def a_method(suffix)
