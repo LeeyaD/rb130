@@ -9,11 +9,9 @@ end
 base8_proc = method(:convert_to_base_8).to_proc
 # base8_proc = proc { |num| num.to_s(8).to_i }
 
-# We'll need a Proc object to make this code work. Replace `a_proc`
-# with the correct object
-# p [8, 10, 12, 14, 16, 33].map(&a_proc) - ORIGINAL
+# We'll need a Proc object to make this code work. Replace `a_proc` with the correct object
+# p [8, 10, 12, 14, 16, 33].map(&a_proc)
 p [8, 10, 12, 14, 16, 33].map(&base8_proc) == [10, 12, 14, 16, 20, 41]
-
 
 # The expected return value of map on this number array should be:
 # [10, 12, 14, 16, 20, 41]
