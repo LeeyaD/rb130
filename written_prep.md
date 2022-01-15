@@ -6,6 +6,7 @@ A programming concept, it refers to a piece of code that's saved and executed at
 A retained reference to the surrounding environment/context, specifically the artifacts (i.e. variables, methods, objects, etc) that are in-scope.
 
 3. How do closures interact with variable scope?
+How does binding affect the scope of closures?
  A closure's binding retains references to surrounding artifacts that were in scope at the time of the closure's creation. Since closures allow us to pass around chunks of code and execute them later, even in other scopes. Bindings allow us to access these retained references even when we're no longer "in-scope".
  ```ruby
  name = "Leeya"
@@ -47,7 +48,7 @@ a_method { |name1, name2, name3| puts "#{name1}, #{name2}, and #{name3}"}
 
 ```
 
-* What are blocks used for? Give examples of specific use cases
+5. What are blocks used for? Give examples of specific use cases
  > 1. When we want to defer some implementation code to method invocation decision. 
  When we (the method implementors) aren't 100% sure what the 'method caller' wants to do. We provide the ability to refine the method implementation without modifying it for others.
  For example, the `#each` method iterates thru a collection, passing each element in the collection to the block to be executed however the method caller. wants since that part of the method's implementation has been left up to them.
@@ -80,19 +81,19 @@ end
 ```
 
 
-7. When can you pass a block to a method? Why?
+6. When can you pass a block to a method? Why?
 Anytime because all Ruby methods can take an optional block as an implicit argument (meaning the method doesn't need to specify the block in its argument list or even execute it at all).
 
-8. How do we make a block argument manditory?
+7. How do we make a block argument manditory?
 By using the Ruby keyword `yield` in our method implmentation. When the method is invoked without a block argument a `LoadJumpError` will be raised.
 
 
-9. How do methods access both implicit and explicit blocks passed in?
+8. How do methods access both implicit and explicit blocks passed in?
 Implicit blocks can be accessed if a method is defined with the `yield` keyword.
 Explicit blocks can be accessed either by calling `Proc#call` on it to execute its code or by name (dropping the unary `&` from the param) to manage like any other object.
 
 
-10. What is `yield` in Ruby and how does it work?
+9. What is `yield` in Ruby and how does it work?
 It's a keyword that we use in method implmenetation that allows us to execute implicitly passed blocks. We can also pass objects to the executed blocks using regular Ruby method-argument syntax.
 ```ruby
 def a_method
@@ -106,25 +107,25 @@ end
 a_method { |name| puts "hello, #{name}" }
 ```
 
-11. How do we check if a block is passed into a method?
+10. How do we check if a block is passed into a method?
 We can call `Kernel#block_given?` which will return `true` if a block has been passed in or `false` otherwise.
 
-12. Why is it important to know that methods and blocks can return closures?
+11. Why is it important to know that methods and blocks can return closures?
 Because a returned closure (Proc or lambda) can be saved to a variable, which can then be managed like any other object. It's the programming concept in action; chunks of code that can be saved and executed later.
 *mention bindings being passed around too
 
-13. What are the benefits of explicit blocks?
+12. What are the benefits of explicit blocks?
 The increased flexibility. When they become named objects we can pass them around, reassign them, and execute them at a later time--as many times as we want--in other scopes.
 
-14. Describe the arity differences of blocks, procs, methods and lambdas.
+13. Describe the arity differences of blocks, procs, methods and lambdas.
 Arity refers to the rule regarding the number of arguments that have to be passed to a block, proc or lambdatouch.
 Blocks & Procs have **lenient arity** which means no errors are raised if too many or too few arguments are passed to them. When passed more arguments than there are parameters, they'll ignore the extra arguments. When passed fewer arguments than there are parameters, they'll set their extra parameters to `nil`).
 Methods & Lambdas have **strict** arity, meaning the number of arguments passed must match the number of parameters being defined, otherwise, an ArgumentError will be raised.
 
-15. How do we specify a block argument explicitly?
+14. How do we specify a block argument explicitly?
 By prepending the unary & to a parameter in a method definition.
 
-16. What does the unary`&` do when in the method parameter?
+15. What does the unary`&` do when in the method parameter?
 Prepended to a method parameter, it creates an optional explicit block parameter that save a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
 ```ruby
 def a_method(&block)
@@ -134,11 +135,11 @@ end
 a_method { puts "I'm a block turned proc" }
 ```
 
-17. What does `&` do when in a method invocation argument?
+16. What does `&` do when in a method invocation argument?
 When applied to an argument object for a method, a unary `&` causes ruby to try to convert the object to a block. If the object is a proc, the conversion happens automatically. If the object is not a proc, then Ruby attempts to call `#to_proc` on the object first, then `&` will convert that proc to a block. If there is no `#to_proc` method provided by the object's class a `TypeError` is raised. 
 
 
-18. How do we utilize the return value of a block?
+17. How do we utilize the return value of a block?
 By assigning it to a variable.
 ```ruby
 def a_method
@@ -149,7 +150,7 @@ end
 a_method { "Leeya" }
 ```
 
-19. How can methods that take a block pass pieces of data to that block?
+18. How can methods that take a block pass pieces of data to that block?
 By yielding, with arguments, to the block.
 ```ruby
 def a_method
@@ -159,7 +160,7 @@ end
 a_method { |name| puts name }
 ```
 
-20. What is Symbol#to_proc and how is it used?
+19. What is Symbol#to_proc and how is it used?
 ```ruby
 arr = [1, 2, 3, 4, 5]
 p arr.map(&:to_s) # specifically `&:to_s`
@@ -172,7 +173,7 @@ p arr.map { |n| n.to_s }
 # then converts that proc to a block. This is the "symbol to proc" operation (though perhaps it should be called "symbol to block")
 ```
 
-21. What are Procs and lambdas? How are they different?
+20. What are Procs and lambdas? How are they different?
 Both are Proc objects. Lambda's are a type of Proc that has strict arity while Proc's have lenient.
 Lambda's also `return` to their calling method rather than returning immediately like Procs.
 ```ruby
@@ -195,7 +196,7 @@ puts lambda_demo_method # Sorry - it's me that's printed.
 # (Notice that the lambda returns back to the method in order to complete it.)
 ```
 
-22. How can we return a Proc from a method or block?
+21. How can we return a Proc from a method or block?
 By making sure it’s the last line of code to be evaluated.
 
 ### Blocks and variable scope
@@ -209,7 +210,7 @@ By making sure it’s the last line of code to be evaluated.
 
 
 # Practice Problems
-1. What is happening in the code below?
+22. What is happening in the code below?
 ```ruby
 arr = [1, 2, 3, 4, 5]
 
@@ -223,7 +224,7 @@ p arr.map { |n| n.to_s }
 # then converts that proc to a block. This is the "symbol to proc" operation (though perhaps it should be called "symbol to block")
 ```
 
-2. How do we get the desired output without altering the method or the method invocations?
+23. How do we get the desired output without altering the method or the method invocations?
 ```ruby
 def call_this
   yield(2)
@@ -237,7 +238,7 @@ p call_this(&to_s) # => returns 2
 p call_this(&to_i) # => returns "2"
 ```
 
-3. What concept does the following code demonstrate?
+24. What concept does the following code demonstrate?
 ```ruby
 def time_it
   time_before = Time.now
@@ -248,7 +249,7 @@ end
 # This code demonstrates 'sandwich coding', the method #time_it is performing a "before" & "after" action in this case timing how long an action takes
 ```
 
-4. What will be outputted from the method invocation block_method('turtle') below? Why does/doesn't it raise an error?
+25. What will be outputted from the method invocation block_method('turtle') below? Why does/doesn't it raise an error?
 ```ruby
 def block_method(animal)
   yield(animal)
@@ -259,12 +260,12 @@ block_method('turtle') do |turtle, seal|
 end
 ```
 
-4.  What will be outputted if we add the follow code to the code above? Why?
+26.  What will be outputted if we add the follow code to the code above? Why?
 ```ruby
 block_method('turtle') { puts "This is a #{animal}."}
 ```
 
-5. What will the method call call_me output? Why?
+27. What will the method call call_me output? Why?
 ```ruby
 def call_me(some_code)
   some_code.call
@@ -277,7 +278,7 @@ name = "Griffin"
 call_me(chunk_of_code)
 ```
 
-6. What happens when we change the code as such:
+28. What happens when we change the code as such:
 ```ruby
 def call_me(some_code)
   some_code.call
@@ -289,7 +290,7 @@ name = "Griffin"
 call_me(chunk_of_code)
 ```
 
-7. What will the method call call_me output? Why?
+29. What will the method call call_me output? Why?
 ```ruby
 def call_me(some_code)
   some_code.call
@@ -305,7 +306,7 @@ chunk_of_code = Proc.new {puts "hi #{name}"}
 call_me(chunk_of_code)
 ```
 
-8. Why does the following raise an error?
+30. Why does the following raise an error?
 ```ruby
 def a_method(pro)
   pro.call
@@ -315,7 +316,7 @@ a = 'friend'
 a_method(&a)
 ```
 
-9. Why does the following code raise an error?
+31. Why does the following code raise an error?
 ```ruby
 def some_method(block)
   block_given?
@@ -326,7 +327,7 @@ bl = { puts "hi" }
 p some_method(bl)
 ```
 
-10. Why does the following code output false?
+32. Why does the following code output false?
 ```ruby
 def some_method(block)
   block_given?
@@ -337,7 +338,7 @@ bloc = proc { puts "hi" }
 p some_method(bloc)
 ```
 
-11. How do we fix the following code so the output is true? Explain
+33. How do we fix the following code so the output is true? Explain
 ```ruby
 def some_method(block)
   block_given? # we want this to return `true`
@@ -348,7 +349,7 @@ bloc = proc { puts "hi" } # do not alter this code
 p some_method(bloc)
 ```
 
-12. Why do we get an `LocalJumpError` when executing the below code? & How do we fix it so the output is hi? (2 possible ways)
+34. Why do we get an `LocalJumpError` when executing the below code? & How do we fix it so the output is hi? (2 possible ways)
 ```ruby
 def some(block)
   block_given?
@@ -358,7 +359,7 @@ end
 bloc = proc { p "hi" } # do not alter
 some(bloc)
 ```
-13. What does the following code tell us about lambda's? (probably not assess on this but good to know)
+35. What does the following code tell us about lambda's? (probably not assess on this but good to know)
 ```ruby
 bloc = lambda { p "hi" }
 
@@ -368,7 +369,7 @@ bloc.lambda? # => true
 new_lam = Lambda.new { p "hi, lambda!" } # => NameError: uninitialized constant Lambda
 ```
 
-14. What does the following code tell us about explicitly returning from proc's and lambda's? (once again probably not assess on this, but good to know ;)
+36. What does the following code tell us about explicitly returning from proc's and lambda's? (once again probably not assess on this, but good to know ;)
 ```ruby
 def lambda_return
   puts "Before lambda call."
@@ -386,6 +387,22 @@ lambda_return #=> "Before lambda call."
               #=> "After lambda call."
 
 proc_return #=> "Before proc call."
+```
+
+37. What will #p output below? Why is this the case and what is this code demonstrating?
+```ruby
+def retained_array
+  arr = []
+  Proc.new do |el|
+    arr << el
+    arr
+  end
+end
+
+arr = retained_array
+arr.call('one')
+arr.call('two')
+p arr.call('three')
 ```
 
 ```ruby
