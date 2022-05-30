@@ -116,7 +116,7 @@ end
 
 test { |prefix| puts prefix + "xyz" }
 ```
-Here we're calling the `#test` method and passing it the following block `{ |prefix| puts prefix + "xyz" }`. The block is passed in and assigned an explicit block parameter `&block`. This parameter, made special by `&`, converts the passed in block into a simple `Proc` object and assigns it to the parameter name prepended by `&`, in this case `block`. We pass the method local variable `block` which references the `Proc` object to the `display` method as an argument. In the `#display` method the passed in block is assigned to the `block` parameter and on the next line we're calling the block with `Proc#call` and passing to it one argument; the string object `">>>"`. The string object gets passed to the `Proc` block and assigned to the block local parameter `prefix`. The block calls `#puts` on `prefefix + "xyz"` which outputs `>>>xyz` and returns `nil`.
+Here we're calling the `#test` method and passing it the following block `{ |prefix| puts prefix + "xyz" }`. The block is passed in and assigned an explicit block parameter `&block`. This parameter, made special by `&`, converts the passed in block into a simple `Proc` object and assigns it to the parameter name prepended by `&`, in this case `block`. We pass the method local variable `block` which references the `Proc` object to the `display` method as an argument. In the `#display` method the passed in block is assigned to the `block` parameter and on the next line we're calling the block with `Proc#call` and passing to it one argument; the string object `">>>"`. The string object gets passed to the block and assigned to the block local parameter `prefix`. The block calls `#puts` on `prefefix + "xyz"` which outputs `>>>xyz` and returns `nil`.
 
 **Important note:** Things get a bit more complicated if the caller passes in a `Proc` object, a `lambda`, or some other object to a method that takes an explicit block. But we won't go into that.
 
@@ -158,7 +158,7 @@ p s1.call           # => 4 (note: this is s1)
 p s2.call           # => 2
 ```
 * `#sequence` method returns a newly created `Proc` object that forms a closure with the local variable `counter`
-* Each time we called `Proc`, it incremented its own private copy of the `counter` variable.
+* Each time we call `Proc`, it increments its own private copy of the `counter` variable.
 * We can create multiple `Proc`s from `#sequence`, and each will have its own independent copy of `counter`. We see this when we call `#sequence` for a second time, assigning the return value (the `Proc` object) to `s2`. When we call our `Proc` object on `s2` the counter starts at 1. This demonstrates that the bound artifacts are separate and indepent of each other.
 
 #### Summary
@@ -253,7 +253,6 @@ Ginni: In order for local variables to be a part of a closures binding, they mus
 It's very common to want to transform all items in a collection by calling the same method on each element so a shortcut was created. When calling methods with blocks we can use the symbol-to-proc trick that take this: `&:to_s` and converts it to this: `{ |n| n.to_s }`. 
 
 The `&` character is prepended to an object (possibly referenced by a variable) to convert the object into a block. If the object is already a `Proc` Ruby can convert it to a block naturally but if the object isn't a '`Proc`, which is the case here `&:to_s` (or object is a `Symbol`), we'll have to first convert it to one. And so, Ruby will call `#to_proc` to return a `Proc` object, then convert the resulting Proc to a block.
-
 
 
 **Within a method invocation**

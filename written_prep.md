@@ -27,7 +27,6 @@ A retained reference to the surrounding environment/context, specifically the ar
  name = "Leeya"
  name1 = Proc.new { puts name }
  name1.call # `name` included in binding, initialized at the time of Proc obj's instantiation & in-scope (inner scope has access to the outer scope)
-
  ```
 
 
@@ -44,7 +43,6 @@ a_method { |name1| puts "#{name1}"}
 # only the first argument is passed & assigned to the block parameter `name`
 a_method { |name1, name2, name3| puts "#{name1}, #{name2}, and #{name3}"} 
 # too few arguments are passed so `name3` is set to `nil` which when interpolated is an empty string
-
 ```
 
 5. What are blocks used for? Give examples of specific use cases
@@ -125,7 +123,7 @@ Methods & Lambdas have **strict** arity, meaning the number of arguments passed 
 By prepending the unary & to a parameter in a method definition.
 
 15. What does the unary`&` do when in the method parameter?
-Prepended to a method parameter, it creates an optional explicit block parameter that save a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
+Prepended to a method parameter, it creates an optional explicit block parameter that saves a block argument into a "simple" Proc object. This allows us to manage the block (now a Proc object) within the method like any other object to be reassigned, passed to other methods, etc. The `&` is dropped when referring to the parameter inside the method.
 ```ruby
 def a_method(&block)
   block.call
@@ -165,7 +163,7 @@ arr = [1, 2, 3, 4, 5]
 p arr.map(&:to_s) # specifically `&:to_s`
 # When applied to an argument object for a method, a unary `&` causes ruby to try to convert that object to a block. If that object is a proc, the conversion happens automatically.
 
-p arr.map(&(Proc.new { |n| n.to_s }))
+p arr.map(Proc.new { |n| n.to_s })
 # If the object is not a proc, then `&` attempts to call the `#to_proc` method on the object first. Used with symbols, e.g., &:to_s Ruby creates a proc that calls the #to_s method on a passed object, and....
 
 p arr.map { |n| n.to_s }
